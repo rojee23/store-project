@@ -1,0 +1,262 @@
+/* ===============================
+   GLOBAL RESET
+=================================*/
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f6fb;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* ===============================
+   BACKGROUND SHAPES
+=================================*/
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    opacity: 0.08;
+    z-index: 0;
+}
+
+.shape:nth-child(1) {
+    width: 200px;
+    height: 200px;
+    top: 50px;
+    left: 50px;
+}
+
+.shape:nth-child(2) {
+    width: 300px;
+    height: 300px;
+    bottom: 100px;
+    right: 100px;
+}
+
+.shape:nth-child(3) {
+    width: 150px;
+    height: 150px;
+    bottom: 50px;
+    left: 200px;
+}
+
+.shape:nth-child(4) {
+    width: 180px;
+    height: 180px;
+    top: 150px;
+    right: 200px;
+}
+
+/* ===============================
+   CONTAINER
+=================================*/
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===============================
+   CARD
+=================================*/
+.login-card {
+    width: 100%;
+    max-width: 500px;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: 0.3s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-5px);
+}
+
+/* ===============================
+   CARD HEADER
+=================================*/
+.card-header {
+    padding: 40px 30px;
+    text-align: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+}
+
+.header-icon {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.card-header h2 {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.card-header p {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* ===============================
+   CARD BODY
+=================================*/
+.card-body {
+    padding: 35px 30px;
+}
+
+/* ===============================
+   BUTTON STYLE
+=================================*/
+.btn-login {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background: #f8f9fc;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 500;
+    color: #333;
+    transition: 0.3s ease;
+    border: 1px solid #eee;
+}
+
+.btn-login:hover {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-login i {
+    transition: 0.3s ease;
+}
+
+.btn-login:hover i {
+    transform: translateX(5px);
+}
+
+/* ===============================
+   FORM CONTROL
+=================================*/
+.form-control {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid #e1e1e1;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: 0.25s ease;
+    background: #f9fafc;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+    background: #fff;
+}
+
+/* ===============================
+   GRID FOR DASHBOARD & FORMS
+=================================*/
+
+/* زرار dashboard */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+/* فورم Create Employee */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+/* عناصر تاخد عرض كامل */
+.full-width {
+    grid-column: span 2;
+}
+
+/* ===============================
+   ALERTS
+=================================*/
+.alert {
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.alert-danger {
+    background: #ffebee;
+    color: #c62828;
+    animation: shake 0.4s ease;
+}
+
+.alert-info {
+    background: #e3f2fd;
+    color: #0d47a1;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+/* ===============================
+   FOOTER=================================*/
+.card-footer {
+    padding: 18px;
+    text-align: center;
+    border-top: 1px solid #f0f0f0;
+    background: #fafafa;
+}
+
+.card-footer small {
+    color: #777;
+    font-size: 13px;
+}
+
+/* ===============================
+   RESPONSIVE
+=================================*/
+@media (max-width: 992px) {
+
+    .dashboard-grid,
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 576px) {
+
+    .login-card {
+        max-width: 100%;
+    }
+
+    .card-header {
+        padding: 30px 20px;
+    }
+
+    .card-body {
+        padding: 25px 20px;
+    }
+}
