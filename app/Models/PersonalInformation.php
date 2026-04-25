@@ -67,25 +67,25 @@ class PersonalInformation extends Model
         return $this->belongsTo(Warehouse::class, 'warehouse_id', 'warehouse_id');
     }
 
-    // Customer Status
+    // Customer Status (هنا تُستخدم كـ حالة الموظف أيضاً)
     public function customerStatus()
     {
         return $this->belongsTo(CustomerStatus::class, 'customer_status_id', 'customer_status_id');
     }
 
-    // Customer Type
+    // Customer Type (ممكن زملائك يستخدموها لاحقاً للزبائن)
     public function customerType()
     {
         return $this->belongsTo(CustomerType::class, 'customer_type_id', 'customer_type_id');
     }
 
-    // User
+    // User (Login)
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
-    // Offers (Many-to-Many)
+    // Offers (Many-to-Many) – إذا حابين يستخدموها لاحقاً
     public function offers()
     {
         return $this->belongsToMany(Offer::class, 'offer_personalinformation', 'personal_id', 'offer_id')

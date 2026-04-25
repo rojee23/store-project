@@ -37,27 +37,32 @@
 
             <div class="d-grid gap-3">
 
+                <!-- Add New Employee -->
                 <a href="{{ route('hr.employee.create') }}" class="btn-login text-center">
                     <span>Add New Employee</span>
                     <i class="fas fa-user-plus"></i>
                 </a>
 
-                <a class="btn-login text-center">
+                <!-- View Employees -->
+                <a href="{{ route('hr.employees') }}" class="btn-login text-center">
                     <span>View Employees</span>
                     <i class="fas fa-list"></i>
                 </a>
 
-                <a class="btn-login text-center">
+                <!-- Manage Departments -->
+                <a href="/hr/departments" class="btn-login text-center">
                     <span>Manage Departments</span>
                     <i class="fas fa-building"></i>
                 </a>
 
-                <a class="btn-login text-center">
+                <!-- Manage Roles -->
+                <a href="/hr/roles" class="btn-login text-center">
                     <span>Manage Roles</span>
                     <i class="fas fa-id-badge"></i>
                 </a>
 
-                <a class="btn-login text-center">
+                <!-- Employee Status -->
+                <a href="/hr/status" class="btn-login text-center">
                     <span>Employee Status</span>
                     <i class="fas fa-user-check"></i>
                 </a>
