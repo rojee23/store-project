@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class CustomerStatus extends Model
 {
     protected $table = 'customer_status';
+
     protected $primaryKey = 'customer_status_id';
+
     public $timestamps = false;
 
     protected $fillable = [
-        'status'
+        'status',
     ];
 
     // ============================

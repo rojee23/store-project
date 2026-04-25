@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Store extends Model
 {
     protected $table = 'store';
+
     protected $primaryKey = 'store_id';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -15,7 +17,7 @@ class Store extends Model
         'city',
         'address',
         'phone',
-        'upload_file'
+        'upload_file',
     ];
 
     // ============================

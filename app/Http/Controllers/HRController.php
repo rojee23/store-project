@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\PersonalInformation;
-use App\Models\Department;
-use App\Models\Role;
 use App\Models\CustomerStatus;
+use App\Models\Department;
+use App\Models\PersonalInformation;
+use App\Models\Role;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HRController extends Controller
 {
@@ -23,8 +24,13 @@ class HRController extends Controller
     // ============================
     public function employees()
     {
-        $employees = PersonalInformation::whereNotNull('department_id')->paginate(10);
-        return view('hr.employees.index', compact('employees'));
+        $employees = PersonalInformation::whereNotNull('department_id')->get();
+
+        $departments = Department::all();
+        $roles = Role::all();
+        $statuses = CustomerStatus::all();
+
+        return view('hr.employees.index', compact('employees', 'departments', 'roles', 'statuses'));
     }
 
     // ============================
@@ -34,7 +40,7 @@ class HRController extends Controller
     {
         $departments = Department::all();
         $roles = Role::all();
-        $statuses = CustomerStatus::all(); // تُستخدم كحالة الموظف
+        $statuses = CustomerStatus::all();
 
         return view('hr.employees.create', compact('departments', 'roles', 'statuses'));
     }
@@ -57,10 +63,9 @@ class HRController extends Controller
 
         $data = $request->all();
 
-        // Upload image
         if ($request->hasFile('upload_file')) {
             $file = $request->file('upload_file');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $filename = time().'_'.$file->getClientOriginalName();
             $file->move(public_path('uploads/employees'), $filename);
             $data['upload_file'] = $filename;
         }
@@ -103,10 +108,9 @@ class HRController extends Controller
 
         $data = $request->all();
 
-        // Upload new image
         if ($request->hasFile('upload_file')) {
             $file = $request->file('upload_file');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $filename = time().'_'.$file->getClientOriginalName();
             $file->move(public_path('uploads/employees'), $filename);
             $data['upload_file'] = $filename;
         }
@@ -123,7 +127,6 @@ class HRController extends Controller
     {
         $employee = PersonalInformation::findOrFail($id);
 
-        // شرط المشروع: لا يمكن حذف موظف مرتبط بقسم
         if ($employee->department_id !== null) {
             return redirect()->back()->with('error', 'Cannot delete employee assigned to a department');
         }
@@ -139,6 +142,7 @@ class HRController extends Controller
     public function showEmployee($id)
     {
         $employee = PersonalInformation::findOrFail($id);
+
         return view('hr.employees.show', compact('employee'));
     }
 
@@ -147,24 +151,165 @@ class HRController extends Controller
     // ============================
     public function searchEmployees(Request $request)
     {
-        $query = PersonalInformation::query();
+        $firstName = $request->firstName ?: null;
+        $department_id = $request->department_id ?: null;
+        $role_id = $request->role_id ?: null;
+        $customer_status_id = $request->customer_status_id ?: null;
 
-        if ($request->firstName) {
-            $query->where('firstName', 'LIKE', '%' . $request->firstName . '%');
+        $employees = DB::select('EXEC SP_SearchEmployees ?, ?, ?, ?', [
+            $firstName,
+            $department_id,
+            $role_id,
+            $customer_status_id,
+        ]);
+
+        return response()->json($employees);
+    }
+
+    // ============================
+    //        MANAGE DEPARTMENTS
+    // ============================
+    public function departments()
+    {
+        $departments = Department::all();
+
+        return view('hr.departments.index', compact('departments'));
+    }
+
+    public function storeDepartment(Request $request)
+    {
+        $request->validate([
+            'department_name' => 'required',
+        ]);
+
+        Department::create([
+            'department_name' => $request->department_name,
+        ]);
+
+        return back()->with('success', 'Department added successfully');
+    }
+
+    public function updateDepartment(Request $request, $id)
+    {
+        $request->validate([
+            'department_name' => 'required',
+        ]);
+
+        Department::where('department_id', $id)->update([
+            'department_name' => $request->department_name,
+        ]);
+
+        return back()->with('success', 'Department updated successfully');
+    }
+
+    public function deleteDepartment($id)
+    {
+        $count = PersonalInformation::where('department_id', $id)->count();
+
+        if ($count > 0) {
+            return back()->with('error', 'Cannot delete department with assigned employees');
         }
 
-        if ($request->department_id) {
-            $query->where('department_id', $request->department_id);
+        Department::where('department_id', $id)->delete();
+
+        return back()->with('success', 'Department deleted successfully');
+    }
+
+    // ============================
+    //        MANAGE ROLES
+    // ============================
+    public function roles()
+    {
+        $roles = Role::all();
+
+        return view('hr.roles.index', compact('roles'));
+    }
+
+    public function storeRole(Request $request)
+    {
+        $request->validate([
+            'role_name' => 'required',
+        ]);
+
+        Role::create([
+            'role_name' => $request->role_name,
+        ]);
+
+        return back()->with('success', 'Role added successfully');
+    }
+
+    public function updateRole(Request $request, $id)
+    {
+        $request->validate([
+            'role_name' => 'required',
+        ]);
+
+        Role::where('role_id', $id)->update([
+            'role_name' => $request->role_name,
+        ]);
+
+        return back()->with('success', 'Role updated successfully');
+    }
+
+    public function deleteRole($id)
+    {
+        $count = PersonalInformation::where('role_id', $id)->count();
+
+        if ($count > 0) {
+            return back()->with('error', 'Cannot delete role assigned to employees');
         }
 
-        if ($request->role_id) {
-            $query->where('role_id', $request->role_id);
+        Role::where('role_id', $id)->delete();
+
+        return back()->with('success', 'Role deleted successfully');
+    }
+
+    // ============================
+    //        EMPLOYEE STATUS
+    // ============================
+    public function status()
+    {
+        $statuses = CustomerStatus::all();
+
+        return view('hr.status.index', compact('statuses'));
+    }
+
+    public function storeStatus(Request $request)
+    {
+        $request->validate([
+            'status_name' => 'required',
+        ]);
+
+        CustomerStatus::create([
+            'status_name' => $request->status_name,
+        ]);
+
+        return back()->with('success', 'Status added successfully');
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status_name' => 'required',
+        ]);
+
+        CustomerStatus::where('customer_status_id', $id)->update([
+            'status_name' => $request->status_name,
+        ]);
+
+        return back()->with('success', 'Status updated successfully');
+    }
+
+    public function deleteStatus($id)
+    {
+        $count = PersonalInformation::where('customer_status_id', $id)->count();
+
+        if ($count > 0) {
+            return back()->with('error', 'Cannot delete status assigned to employees');
         }
 
-        if ($request->customer_status_id) {
-            $query->where('customer_status_id', $request->customer_status_id);
-        }
+        CustomerStatus::where('customer_status_id', $id)->delete();
 
-        return response()->json($query->get());
+        return back()->with('success', 'Status deleted successfully');
     }
 }

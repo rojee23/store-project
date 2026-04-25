@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class WarehouseProduct extends Model
 {
     protected $table = 'warehouse_product';
+
     public $timestamps = false;
 
     protected $fillable = [
         'warehouse_id',
-        'product_id'
+        'product_id',
     ];
 
     // ============================

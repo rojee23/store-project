@@ -7,14 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class OfferPersonalInformation extends Model
 {
     protected $table = 'offer_personalinformation';
+
     protected $primaryKey = 'id';
+
     public $timestamps = false;
 
     protected $fillable = [
         'offer_id',
         'personal_id',
         'employee_status_id',
-        'status'
+        'status',
     ];
 
     // ============================

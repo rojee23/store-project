@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class PersonalInformation extends Model
 {
     protected $table = 'personal_information';
+
     protected $primaryKey = 'personal_id';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -30,7 +32,7 @@ class PersonalInformation extends Model
         'warehouse_id',
         'customer_status_id',
         'customer_type_id',
-        'user_id'
+        'user_id',
     ];
 
     // ============================
@@ -89,6 +91,6 @@ class PersonalInformation extends Model
     public function offers()
     {
         return $this->belongsToMany(Offer::class, 'offer_personalinformation', 'personal_id', 'offer_id')
-                    ->withPivot('employee_status_id', 'status');
+            ->withPivot('employee_status_id', 'status');
     }
 }

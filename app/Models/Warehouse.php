@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Warehouse extends Model
 {
     protected $table = 'warehouse';
+
     protected $primaryKey = 'warehouse_id';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -16,7 +18,7 @@ class Warehouse extends Model
         'address',
         'phone',
         'upload_file',
-        'manager_id'
+        'manager_id',
     ];
 
     // ============================
