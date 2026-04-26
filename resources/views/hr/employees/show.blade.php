@@ -35,6 +35,13 @@
 
         <div class="card-body">
 
+            <!-- Back Button -->
+            <div class="mb-3">
+                <a href="{{ route('hr.employees') }}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Back to Employees
+                </a>
+            </div>
+
             <div class="text-center mb-4">
                 @if($employee->upload_file)
                     <img src="{{ asset('uploads/employees/' . $employee->upload_file) }}"

@@ -67,6 +67,12 @@
                     <i class="fas fa-user-check"></i>
                 </a>
 
+                <!-- Logout -->
+                <a href="{{ route('logout') }}" class="btn-login text-center" style="background: #e74c3c;">
+                    <span>Logout</span>
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+
             </div>
 
         </div>

@@ -35,6 +35,13 @@
 
         <div class="card-body">
 
+            <!-- Back Button -->
+            <div class="mb-3">
+                <a href="{{ route('hr.employees') }}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Back to Employees
+                </a>
+            </div>
+
             <form action="{{ route('hr.employee.update', $employee->personal_id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
 

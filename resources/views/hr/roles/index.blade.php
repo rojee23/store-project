@@ -35,6 +35,13 @@
 
         <div class="card-body">
 
+            <!-- Back Button -->
+            <div class="mb-3">
+                <a href="{{ route('hr.dashboard') }}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+
             <!-- Add Role Button -->
             <button class="btn-login mb-3 w-100" data-bs-toggle="modal" data-bs-target="#addRoleModal">
                 <span>Add New Role</span>

@@ -35,6 +35,13 @@
 
         <div class="card-body">
 
+            <!-- Back Button -->
+            <div class="mb-3">
+                <a href="{{ route('hr.dashboard') }}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+
             <!-- Filters -->
             <div class="mb-4">
                 <h5 class="mb-3">Search Filters</h5>
