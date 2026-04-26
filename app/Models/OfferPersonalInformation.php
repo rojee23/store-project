@@ -21,7 +21,7 @@ class OfferPersonalInformation extends Model
     //        RELATIONSHIPS
     // ============================
 
-    // Offer
+    // Offer (العرض)
     public function offer()
     {
         return $this->belongsTo(Offer::class, 'offer_id', 'offer_id');

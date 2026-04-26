@@ -1,63 +1,96 @@
 <?php
 
-use App\Http\Controllers\HRController;
-use App\Http\Controllers\LoginController;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\HRController;
 
-// ============================
-//        LOGIN ROUTES
-// ============================
-Route::get('/', [LoginController::class, 'loginPage'])->name('login');
-Route::post('/login', [LoginController::class, 'loginAction'])->name('login.action');
+/*
+|--------------------------------------------------------------------------
+| Login Routes
+|--------------------------------------------------------------------------
+*/
 
-// ============================
-//        HR ROUTES
-// ============================
-Route::prefix('hr')->group(function () {
+Route::get('/', function () {
+    return view('login');
+})->name('login');
 
-    // Dashboard
-    Route::get('/dashboard', [HRController::class, 'dashboard'])->name('hr.dashboard');
+Route::post('/login/action', [LoginController::class, 'login'])->name('login.action');
 
-    // Employees
-    Route::get('/employees', [HRController::class, 'employees'])->name('hr.employees');
-    Route::get('/employee/create', [HRController::class, 'createEmployee'])->name('hr.employee.create');
-    Route::post('/employee/store', [HRController::class, 'storeEmployee'])->name('hr.employee.store');
-    Route::get('/employee/edit/{id}', [HRController::class, 'editEmployee'])->name('hr.employee.edit');
-    Route::post('/employee/update/{id}', [HRController::class, 'updateEmployee'])->name('hr.employee.update');
-    Route::get('/employee/delete/{id}', [HRController::class, 'deleteEmployee'])->name('hr.employee.delete');
-    Route::get('/employee/show/{id}', [HRController::class, 'showEmployee'])->name('hr.employee.show');
-    Route::get('/employee/search/api', [HRController::class, 'searchEmployees'])->name('hr.employee.search.api');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    // Departments
-    Route::get('/departments', [HRController::class, 'departments']);
-    Route::post('/departments/store', [HRController::class, 'storeDepartment']);
-    Route::post('/departments/update/{id}', [HRController::class, 'updateDepartment']);
-    Route::get('/departments/delete/{id}', [HRController::class, 'deleteDepartment']);
 
-    // Roles
-    Route::get('/roles', [HRController::class, 'roles']);
-    Route::post('/roles/store', [HRController::class, 'storeRole']);
-    Route::post('/roles/update/{id}', [HRController::class, 'updateRole']);
-    Route::get('/roles/delete/{id}', [HRController::class, 'deleteRole']);
+/*
+|--------------------------------------------------------------------------
+| HR Dashboard
+|--------------------------------------------------------------------------
+*/
 
-    // Employee Status
-    Route::get('/status', [HRController::class, 'status']);
-    Route::post('/status/store', [HRController::class, 'storeStatus']);
-    Route::post('/status/update/{id}', [HRController::class, 'updateStatus']);
-    Route::get('/status/delete/{id}', [HRController::class, 'deleteStatus']);
+Route::get('/hr/dashboard', [HRController::class, 'dashboard'])->name('hr.dashboard');
 
-});
 
-// ============================
-//        TEST DB CONNECTION
-// ============================
-Route::get('/test-db', function () {
-    try {
-        DB::connection()->getPdo();
+/*
+|--------------------------------------------------------------------------
+| Employees CRUD
+|--------------------------------------------------------------------------
+*/
 
-        return 'Connected to SQL Server Successfully!';
-    } catch (Exception $e) {
-        return $e->getMessage();
-    }
-});
+Route::get('/hr/employees', [HRController::class, 'employees'])->name('hr.employees');
+
+Route::get('/hr/employee/create', [HRController::class, 'createEmployee'])->name('hr.employee.create');
+Route::post('/hr/employee/store', [HRController::class, 'storeEmployee'])->name('hr.employee.store');
+
+Route::get('/hr/employee/edit/{id}', [HRController::class, 'editEmployee'])->name('hr.employee.edit');
+Route::post('/hr/employee/update/{id}', [HRController::class, 'updateEmployee'])->name('hr.employee.update');
+
+Route::get('/hr/employee/delete/{id}', [HRController::class, 'deleteEmployee'])->name('hr.employee.delete');
+
+Route::get('/hr/employee/show/{id}', [HRController::class, 'showEmployee'])->name('hr.employee.show');
+
+
+// AJAX Search (Stored Procedure)
+Route::get('/hr/employee/search/api', [HRController::class, 'searchEmployees'])->name('hr.employee.search');
+
+
+/*
+|--------------------------------------------------------------------------
+| Departments CRUD
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/hr/departments', [HRController::class, 'departments'])->name('hr.departments');
+
+Route::post('/hr/departments/store', [HRController::class, 'storeDepartment'])->name('hr.departments.store');
+
+Route::post('/hr/departments/update/{id}', [HRController::class, 'updateDepartment'])->name('hr.departments.update');
+
+Route::get('/hr/departments/delete/{id}', [HRController::class, 'deleteDepartment'])->name('hr.departments.delete');
+
+
+/*
+|--------------------------------------------------------------------------
+| Roles CRUD
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/hr/roles', [HRController::class, 'roles'])->name('hr.roles');
+
+Route::post('/hr/roles/store', [HRController::class, 'storeRole'])->name('hr.roles.store');
+
+Route::post('/hr/roles/update/{id}', [HRController::class, 'updateRole'])->name('hr.roles.update');
+
+Route::get('/hr/roles/delete/{id}', [HRController::class, 'deleteRole'])->name('hr.roles.delete');
+
+
+/*
+|--------------------------------------------------------------------------
+| Employee Status CRUD
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/hr/status', [HRController::class, 'status'])->name('hr.status');
+
+Route::post('/hr/status/store', [HRController::class, 'storeStatus'])->name('hr.status.store');
+
+Route::post('/hr/status/update/{id}', [HRController::class, 'updateStatus'])->name('hr.status.update');
+
+Route::get('/hr/status/delete/{id}', [HRController::class, 'deleteStatus'])->name('hr.status.delete');

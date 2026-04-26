@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CustomerStatus;
 use App\Models\Department;
+use App\Models\EmployeeStatus;
 use App\Models\PersonalInformation;
 use App\Models\Role;
 use Illuminate\Http\Request;
@@ -28,7 +28,7 @@ class HRController extends Controller
 
         $departments = Department::all();
         $roles = Role::all();
-        $statuses = CustomerStatus::all();
+        $statuses = EmployeeStatus::all(); // ✔ تعديل مهم
 
         return view('hr.employees.index', compact('employees', 'departments', 'roles', 'statuses'));
     }
@@ -40,7 +40,7 @@ class HRController extends Controller
     {
         $departments = Department::all();
         $roles = Role::all();
-        $statuses = CustomerStatus::all();
+        $statuses = EmployeeStatus::all(); // ✔ تعديل
 
         return view('hr.employees.create', compact('departments', 'roles', 'statuses'));
     }
@@ -53,19 +53,19 @@ class HRController extends Controller
         $request->validate([
             'firstName' => 'required',
             'lastName' => 'required',
-            'birthday' => 'required|date',
+            'birthday' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
             'department_id' => 'required',
             'role_id' => 'required',
-            'customer_status_id' => 'required',
+            'employee_status_id' => 'required', // ✔ تعديل
         ]);
 
         $data = $request->all();
 
         if ($request->hasFile('upload_file')) {
             $file = $request->file('upload_file');
-            $filename = time().'_'.$file->getClientOriginalName();
+            $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads/employees'), $filename);
             $data['upload_file'] = $filename;
         }
@@ -83,7 +83,7 @@ class HRController extends Controller
         $employee = PersonalInformation::findOrFail($id);
         $departments = Department::all();
         $roles = Role::all();
-        $statuses = CustomerStatus::all();
+        $statuses = EmployeeStatus::all(); // ✔ تعديل
 
         return view('hr.employees.edit', compact('employee', 'departments', 'roles', 'statuses'));
     }
@@ -98,19 +98,19 @@ class HRController extends Controller
         $request->validate([
             'firstName' => 'required',
             'lastName' => 'required',
-            'birthday' => 'required|date',
+            'birthday' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
             'department_id' => 'required',
             'role_id' => 'required',
-            'customer_status_id' => 'required',
+            'employee_status_id' => 'required', // ✔ تعديل
         ]);
 
         $data = $request->all();
 
         if ($request->hasFile('upload_file')) {
             $file = $request->file('upload_file');
-            $filename = time().'_'.$file->getClientOriginalName();
+            $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads/employees'), $filename);
             $data['upload_file'] = $filename;
         }
@@ -154,13 +154,13 @@ class HRController extends Controller
         $firstName = $request->firstName ?: null;
         $department_id = $request->department_id ?: null;
         $role_id = $request->role_id ?: null;
-        $customer_status_id = $request->customer_status_id ?: null;
+        $employee_status_id = $request->employee_status_id ?: null; // ✔ تعديل
 
         $employees = DB::select('EXEC SP_SearchEmployees ?, ?, ?, ?', [
             $firstName,
             $department_id,
             $role_id,
-            $customer_status_id,
+            $employee_status_id,
         ]);
 
         return response()->json($employees);
@@ -232,7 +232,7 @@ class HRController extends Controller
         ]);
 
         Role::create([
-            'role_name' => $request->role_name,
+            'type' => $request->role_name,
         ]);
 
         return back()->with('success', 'Role added successfully');
@@ -245,7 +245,7 @@ class HRController extends Controller
         ]);
 
         Role::where('role_id', $id)->update([
-            'role_name' => $request->role_name,
+            'type' => $request->role_name,
         ]);
 
         return back()->with('success', 'Role updated successfully');
@@ -269,7 +269,7 @@ class HRController extends Controller
     // ============================
     public function status()
     {
-        $statuses = CustomerStatus::all();
+        $statuses = EmployeeStatus::all(); // ✔ تعديل
 
         return view('hr.status.index', compact('statuses'));
     }
@@ -280,8 +280,8 @@ class HRController extends Controller
             'status_name' => 'required',
         ]);
 
-        CustomerStatus::create([
-            'status_name' => $request->status_name,
+        EmployeeStatus::create([
+            'status' => $request->status_name,
         ]);
 
         return back()->with('success', 'Status added successfully');
@@ -293,8 +293,8 @@ class HRController extends Controller
             'status_name' => 'required',
         ]);
 
-        CustomerStatus::where('customer_status_id', $id)->update([
-            'status_name' => $request->status_name,
+        EmployeeStatus::where('employee_status_id', $id)->update([
+            'status' => $request->status_name,
         ]);
 
         return back()->with('success', 'Status updated successfully');
@@ -302,13 +302,13 @@ class HRController extends Controller
 
     public function deleteStatus($id)
     {
-        $count = PersonalInformation::where('customer_status_id', $id)->count();
+        $count = PersonalInformation::where('employee_status_id', $id)->count();
 
         if ($count > 0) {
             return back()->with('error', 'Cannot delete status assigned to employees');
         }
 
-        CustomerStatus::where('customer_status_id', $id)->delete();
+        EmployeeStatus::where('employee_status_id', $id)->delete();
 
         return back()->with('success', 'Status deleted successfully');
     }

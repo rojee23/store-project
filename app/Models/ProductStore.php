@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductStore extends Model
 {
     protected $table = 'product_store';
-
+    protected $primaryKey = 'id'; // حسب الـ ERD كل pivot tables فيها id
     public $timestamps = false;
 
     protected $fillable = [

@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Warehouse extends Model
 {
     protected $table = 'warehouse';
-
     protected $primaryKey = 'warehouse_id';
-
     public $timestamps = false;
 
     protected $fillable = [
@@ -40,6 +38,11 @@ class Warehouse extends Model
     // Products in warehouse (Many-to-Many)
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'warehouse_product', 'warehouse_id', 'product_id');
+        return $this->belongsToMany(
+            Product::class,
+            'warehouse_product',
+            'warehouse_id',
+            'product_id'
+        );
     }
 }

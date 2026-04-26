@@ -93,12 +93,12 @@
 
                 <div class="col-md-6 mb-3">
                     <strong>Role:</strong>
-                    {{ $employee->role->role_name ?? '-' }}
+                    {{ $employee->role->type ?? '-' }}
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <strong>Status:</strong>
-                    {{ $employee->customerStatus->status_name ?? '-' }}
+                    {{ $employee->employeeStatus->status ?? '-' }}
                 </div>
 
             </div>

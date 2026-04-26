@@ -4,34 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OfferPersonalInformation extends Model
+class Offer extends Model
 {
-    protected $table = 'offer_personalinformation';
-
-    protected $primaryKey = 'id';
-
+    protected $table = 'offer';
+    protected $primaryKey = 'offer_id';
     public $timestamps = false;
 
     protected $fillable = [
-        'offer_id',
-        'personal_id',
-        'employee_status_id',
+        'offer_name',
+        'offer_details',
+        'start_date',
+        'end_date',
         'status',
     ];
 
-    // ============================
-    //        RELATIONSHIPS
-    // ============================
-
-    // Offer
-    public function offer()
+    public function employees()
     {
-        return $this->belongsTo(Offer::class, 'offer_id', 'offer_id');
-    }
-
-    // Employee (Personal Information)
-    public function employee()
-    {
-        return $this->belongsTo(PersonalInformation::class, 'personal_id', 'personal_id');
+        return $this->belongsToMany(
+            PersonalInformation::class,
+            'offer_personalinformation',
+            'offer_id',
+            'personal_id'
+        )->withPivot('employee_status_id');
     }
 }

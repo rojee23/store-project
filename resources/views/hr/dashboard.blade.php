@@ -50,19 +50,19 @@
                 </a>
 
                 <!-- Manage Departments -->
-                <a href="/hr/departments" class="btn-login text-center">
+                <a href="{{ route('hr.departments') }}" class="btn-login text-center">
                     <span>Manage Departments</span>
                     <i class="fas fa-building"></i>
                 </a>
 
                 <!-- Manage Roles -->
-                <a href="/hr/roles" class="btn-login text-center">
+                <a href="{{ route('hr.roles') }}" class="btn-login text-center">
                     <span>Manage Roles</span>
                     <i class="fas fa-id-badge"></i>
                 </a>
 
                 <!-- Employee Status -->
-                <a href="/hr/status" class="btn-login text-center">
+                <a href="{{ route('hr.status') }}" class="btn-login text-center">
                     <span>Employee Status</span>
                     <i class="fas fa-user-check"></i>
                 </a>

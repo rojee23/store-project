@@ -10,13 +10,13 @@
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Theme (نفس تبع الـ Dashboard) -->
+    <!-- Theme -->
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
 </head>
 
 <body>
 
-<!-- Background shapes (نفس تبع الـ Dashboard) -->
+<!-- Background shapes -->
 <div class="shape"></div>
 <div class="shape"></div>
 <div class="shape"></div>
@@ -113,17 +113,17 @@
                         <select name="role_id" class="form-select" required>
                             <option value="">Select Role</option>
                             @foreach($roles as $r)
-                                <option value="{{ $r->role_id }}">{{ $r->role_name }}</option>
+                                <option value="{{ $r->role_id }}">{{ $r->type }}</option>
                             @endforeach
                         </select>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Employee Status</label>
-                        <select name="customer_status_id" class="form-select" required>
+                        <select name="employee_status_id" class="form-select" required>
                             <option value="">Select Status</option>
                             @foreach($statuses as $s)
-                                <option value="{{ $s->customer_status_id }}">{{ $s->status_name }}</option>
+                                <option value="{{ $s->employee_status_id }}">{{ $s->status }}</option>
                             @endforeach
                         </select>
                     </div>

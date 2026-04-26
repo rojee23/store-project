@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class PersonalInformation extends Model
 {
     protected $table = 'personal_information';
-
     protected $primaryKey = 'personal_id';
-
     public $timestamps = false;
 
     protected $fillable = [
@@ -26,7 +24,7 @@ class PersonalInformation extends Model
         'address',
         'salary',
         'upload_file',
-        'store_id',
+        'store_id',            // ✔ التصحيح المهم
         'role_id',
         'department_id',
         'warehouse_id',
@@ -48,7 +46,7 @@ class PersonalInformation extends Model
     // Store
     public function store()
     {
-        return $this->belongsTo(Store::class, 'store_id', 'store_id');
+        return $this->belongsTo(Store::class, 'store_id', 'store_id'); // ✔ التصحيح
     }
 
     // Role
@@ -69,13 +67,13 @@ class PersonalInformation extends Model
         return $this->belongsTo(Warehouse::class, 'warehouse_id', 'warehouse_id');
     }
 
-    // Customer Status (هنا تُستخدم كـ حالة الموظف أيضاً)
+    // Customer Status
     public function customerStatus()
     {
         return $this->belongsTo(CustomerStatus::class, 'customer_status_id', 'customer_status_id');
     }
 
-    // Customer Type (ممكن زملائك يستخدموها لاحقاً للزبائن)
+    // Customer Type
     public function customerType()
     {
         return $this->belongsTo(CustomerType::class, 'customer_type_id', 'customer_type_id');
@@ -87,10 +85,14 @@ class PersonalInformation extends Model
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
-    // Offers (Many-to-Many) – إذا حابين يستخدموها لاحقاً
+    // Offers (Many-to-Many)
     public function offers()
     {
-        return $this->belongsToMany(Offer::class, 'offer_personalinformation', 'personal_id', 'offer_id')
-            ->withPivot('employee_status_id', 'status');
+        return $this->belongsToMany(
+            Offer::class,
+            'offer_personalinformation',
+            'personal_id',
+            'offer_id'
+        )->withPivot('employee_status_id', 'status');
     }
 }

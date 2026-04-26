@@ -72,38 +72,6 @@
                                     </a>
                                 </td>
                             </tr>
-
-                            <!-- Edit Modal -->
-                            <div class="modal fade" id="editDepartmentModal{{ $dep->department_id }}">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-                                            <h5>Edit Department</h5>
-                                            <button class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-
-                                        <form action="/hr/departments/update/{{ $dep->department_id }}" method="POST">
-                                            @csrf
-
-                                            <div class="modal-body">
-                                                <label class="form-label">Department Name</label>
-                                                <input type="text" name="department_name"
-                                                       class="form-control"
-                                                       value="{{ $dep->department_name }}" required>
-                                            </div>
-
-                                            <div class="modal-footer">
-                                                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                <button class="btn btn-primary">Save Changes</button>
-                                            </div>
-
-                                        </form>
-
-                                    </div>
-                                </div>
-                            </div>
-
                         @endforeach
                     </tbody>
 
@@ -147,6 +115,39 @@
         </div>
     </div>
 </div>
+
+<!-- Edit Modals (Moved OUTSIDE table to fix input issue) -->
+@foreach($departments as $dep)
+<div class="modal fade" id="editDepartmentModal{{ $dep->department_id }}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Edit Department</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form action="/hr/departments/update/{{ $dep->department_id }}" method="POST">
+                @csrf
+
+                <div class="modal-body">
+                    <label class="form-label">Department Name</label>
+                    <input type="text" name="department_name"
+                           class="form-control"
+                           value="{{ $dep->department_name }}" required>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary">Save Changes</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+@endforeach
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -3,21 +3,40 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
-    public function loginPage()
+    public function login(Request $request)
     {
-        return view('login');
-    }
+        $username = $request->username;
+        $password = $request->password;
 
-    public function loginAction(Request $request)
-    {
+        // جلب المستخدم من جدول USER
+        $user = DB::table('USER')
+            ->where('username', $username)
+            ->first();
 
-        if ($request->username === 'student1' && $request->password === '1234') {
-            return redirect()->route('hr.dashboard');
+        if (!$user) {
+            return back()->with('error', 'Invalid username');
         }
 
-        return back()->with('error', 'Invalid username or password');
+        if ($user->password !== $password) {
+            return back()->with('error', 'Incorrect password');
+        }
+
+        // تخزين الجلسة
+        Session::put('user_id', $user->user_id);
+        Session::put('username', $user->username);
+        Session::put('status', $user->account_status);
+
+        return redirect()->route('hr.dashboard');
+    }
+
+    public function logout()
+    {
+        Session::flush();
+        return redirect()->route('login');
     }
 }

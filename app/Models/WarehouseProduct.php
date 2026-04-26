@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class WarehouseProduct extends Model
 {
     protected $table = 'warehouse_product';
-
+    protected $primaryKey = 'id'; // إذا الجدول فيه id كـ PK
     public $timestamps = false;
 
     protected $fillable = [

@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Store extends Model
 {
     protected $table = 'store';
-
     protected $primaryKey = 'store_id';
-
     public $timestamps = false;
 
     protected $fillable = [
@@ -27,12 +25,18 @@ class Store extends Model
     // Employees (Personal Information)
     public function employees()
     {
-        return $this->hasMany(PersonalInformation::class, 'store_id', 'store_id');
+        return $this->hasMany(PersonalInformation::class, 'stores_id', 'store_id');
+        // ملاحظة: حسب الـ ERD العمود اسمو stores_id داخل personal_information
     }
 
     // Products in store (Many-to-Many)
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'product_store', 'store_id', 'product_id');
+        return $this->belongsToMany(
+            Product::class,
+            'product_store',
+            'store_id',
+            'product_id'
+        );
     }
 }

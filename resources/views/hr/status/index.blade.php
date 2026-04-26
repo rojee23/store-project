@@ -55,18 +55,22 @@
                     <tbody>
                         @foreach($statuses as $status)
                             <tr>
-                                <td>{{ $status->customer_status_id }}</td>
-                                <td>{{ $status->status_name }}</td>
+                                <!-- FIXED: use employee_status_id -->
+                                <td>{{ $status->employee_status_id }}</td>
+
+                                <!-- FIXED: use status -->
+                                <td>{{ $status->status }}</td>
+
                                 <td>
                                     <!-- Edit -->
                                     <button class="btn btn-warning btn-sm"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#editStatusModal{{ $status->customer_status_id }}">
+                                            data-bs-target="#editStatusModal{{ $status->employee_status_id }}">
                                         <i class="fas fa-edit"></i>
                                     </button>
 
                                     <!-- Delete -->
-                                    <a href="/hr/status/delete/{{ $status->customer_status_id }}"
+                                    <a href="/hr/status/delete/{{ $status->employee_status_id }}"
                                        class="btn btn-danger btn-sm">
                                         <i class="fas fa-trash"></i>
                                     </a>
@@ -74,7 +78,7 @@
                             </tr>
 
                             <!-- Edit Modal -->
-                            <div class="modal fade" id="editStatusModal{{ $status->customer_status_id }}">
+                            <div class="modal fade" id="editStatusModal{{ $status->employee_status_id }}">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
 
@@ -83,14 +87,16 @@
                                             <button class="btn-close" data-bs-dismiss="modal"></button>
                                         </div>
 
-                                        <form action="/hr/status/update/{{ $status->customer_status_id }}" method="POST">
+                                        <form action="/hr/status/update/{{ $status->employee_status_id }}" method="POST">
                                             @csrf
 
                                             <div class="modal-body">
                                                 <label class="form-label">Status Name</label>
+
+                                                <!-- FIXED: use value="{{ $status->status }}" -->
                                                 <input type="text" name="status_name"
                                                        class="form-control"
-                                                       value="{{ $status->status_name }}" required>
+                                                       value="{{ $status->status }}" required>
                                             </div>
 
                                             <div class="modal-footer">
@@ -134,6 +140,8 @@
 
                 <div class="modal-body">
                     <label class="form-label">Status Name</label>
+
+                    <!-- FIXED: name="status_name" is correct -->
                     <input type="text" name="status_name" class="form-control" required>
                 </div>
 

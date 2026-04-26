@@ -116,7 +116,7 @@
                             @foreach($roles as $r)
                                 <option value="{{ $r->role_id }}"
                                     {{ $employee->role_id == $r->role_id ? 'selected' : '' }}>
-                                    {{ $r->role_name }}
+                                    {{ $r->type }}
                                 </option>
                             @endforeach
                         </select>
@@ -124,11 +124,11 @@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Employee Status</label>
-                        <select name="customer_status_id" class="form-select" required>
+                        <select name="employee_status_id" class="form-select" required>
                             @foreach($statuses as $s)
-                                <option value="{{ $s->customer_status_id }}"
-                                    {{ $employee->customer_status_id == $s->customer_status_id ? 'selected' : '' }}>
-                                    {{ $s->status_name }}
+                                <option value="{{ $s->employee_status_id }}"
+                                    {{ $employee->employee_status_id == $s->employee_status_id ? 'selected' : '' }}>
+                                    {{ $s->status }}
                                 </option>
                             @endforeach
                         </select>

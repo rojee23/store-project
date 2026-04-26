@@ -56,7 +56,10 @@
                         @foreach($roles as $role)
                             <tr>
                                 <td>{{ $role->role_id }}</td>
-                                <td>{{ $role->role_name }}</td>
+
+                                <!-- FIXED: use 'type' instead of 'role_name' -->
+                                <td>{{ $role->type }}</td>
+
                                 <td>
                                     <!-- Edit -->
                                     <button class="btn btn-warning btn-sm"
@@ -88,9 +91,11 @@
 
                                             <div class="modal-body">
                                                 <label class="form-label">Role Name</label>
+
+                                                <!-- FIXED: use value="{{ $role->type }}" -->
                                                 <input type="text" name="role_name"
                                                        class="form-control"
-                                                       value="{{ $role->role_name }}" required>
+                                                       value="{{ $role->type }}" required>
                                             </div>
 
                                             <div class="modal-footer">

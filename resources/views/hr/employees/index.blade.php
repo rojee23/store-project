@@ -10,7 +10,7 @@
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Theme (نفس تبع الـ Dashboard) -->
+    <!-- Theme -->
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
 </head>
 
@@ -58,7 +58,7 @@
                         <select id="filterRole" class="form-select">
                             <option value="">Role</option>
                             @foreach($roles as $r)
-                                <option value="{{ $r->role_id }}">{{ $r->role_name }}</option>
+                                <option value="{{ $r->role_id }}">{{ $r->type }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -67,7 +67,7 @@
                         <select id="filterStatus" class="form-select">
                             <option value="">Status</option>
                             @foreach($statuses as $s)
-                                <option value="{{ $s->customer_status_id }}">{{ $s->status_name }}</option>
+                                <option value="{{ $s->employee_status_id }}">{{ $s->status }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -110,8 +110,8 @@
 
                                 <td>{{ $emp->firstName }} {{ $emp->lastName }}</td>
                                 <td>{{ $emp->department->department_name ?? '-' }}</td>
-                                <td>{{ $emp->role->role_name ?? '-' }}</td>
-                                <td>{{ $emp->customerStatus->status_name ?? '-' }}</td>
+                                <td>{{ $emp->role->type ?? '-' }}</td>
+                                <td>{{ $emp->employeeStatus->status ?? '-' }}</td>
 
                                 <td>
                                     <a href="{{ route('hr.employee.show', $emp->personal_id) }}" class="btn btn-sm btn-info">
@@ -151,7 +151,7 @@ document.getElementById('searchBtn').addEventListener('click', function () {
     let role = document.getElementById('filterRole').value;
     let status = document.getElementById('filterStatus').value;
 
-    fetch(`/hr/employee/search/api?firstName=${name}&department_id=${dep}&role_id=${role}&customer_status_id=${status}`)
+    fetch(`/hr/employee/search/api?firstName=${name}&department_id=${dep}&role_id=${role}&employee_status_id=${status}`)
         .then(res => res.json())
         .then(data => {
 
@@ -166,7 +166,7 @@ document.getElementById('searchBtn').addEventListener('click', function () {
                         <td>${emp.firstName} ${emp.lastName}</td>
                         <td>${emp.department_id ?? '-'}</td>
                         <td>${emp.role_id ?? '-'}</td>
-                        <td>${emp.customer_status_id ?? '-'}</td>
+                        <td>${emp.employee_status_id ?? '-'}</td>
                         <td>
                             <a href="/hr/employee/show/${emp.personal_id}" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
                             <a href="/hr/employee/edit/${emp.personal_id}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
