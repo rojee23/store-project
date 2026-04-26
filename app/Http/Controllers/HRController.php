@@ -12,57 +12,77 @@ use Illuminate\Support\Facades\DB;
 class HRController extends Controller
 {
     // ============================
-    //        HR DASHBOARD
+    // LOGIN PROTECTION
+    // ============================
+    private function checkLogin()
+    {
+        if (!session()->has('logged_in')) {
+            return redirect()->route('login')->with('error', 'Please login first');
+        }
+    }
+
+    // ============================
+    // HR DASHBOARD
     // ============================
     public function dashboard()
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         return view('hr.dashboard');
     }
 
     // ============================
-    //        LIST EMPLOYEES
+    // LIST EMPLOYEES
     // ============================
     public function employees()
     {
-        $employees = PersonalInformation::whereNotNull('department_id')->get();
+        if ($redirect = $this->checkLogin()) return $redirect;
 
+        $employees = PersonalInformation::whereNotNull('department_id')->get();
         $departments = Department::all();
         $roles = Role::all();
-        $statuses = EmployeeStatus::all(); // ✔ تعديل مهم
+        $statuses = EmployeeStatus::all();
 
         return view('hr.employees.index', compact('employees', 'departments', 'roles', 'statuses'));
     }
 
     // ============================
-    //        CREATE EMPLOYEE
+    // CREATE EMPLOYEE
     // ============================
     public function createEmployee()
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $departments = Department::all();
         $roles = Role::all();
-        $statuses = EmployeeStatus::all(); // ✔ تعديل
+        $statuses = EmployeeStatus::all();
 
         return view('hr.employees.create', compact('departments', 'roles', 'statuses'));
     }
 
     // ============================
-    //        STORE EMPLOYEE
+    // STORE EMPLOYEE
     // ============================
     public function storeEmployee(Request $request)
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
+        // ⭐ VALIDATION لمنع overflow
         $request->validate([
             'firstName' => 'required',
             'lastName' => 'required',
             'birthday' => 'required',
             'email' => 'required|email',
-            'phone' => 'required',
+            'phone' => 'required|numeric|digits_between:1,10',
+            'national_number' => 'nullable|numeric|digits_between:1,10',
             'department_id' => 'required',
             'role_id' => 'required',
-            'employee_status_id' => 'required', // ✔ تعديل
+            'employee_status_id' => 'required',
         ]);
 
         $data = $request->all();
 
+        // رفع الصورة
         if ($request->hasFile('upload_file')) {
             $file = $request->file('upload_file');
             $filename = time() . '_' . $file->getClientOriginalName();
@@ -76,34 +96,40 @@ class HRController extends Controller
     }
 
     // ============================
-    //        EDIT EMPLOYEE
+    // EDIT EMPLOYEE
     // ============================
     public function editEmployee($id)
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $employee = PersonalInformation::findOrFail($id);
         $departments = Department::all();
         $roles = Role::all();
-        $statuses = EmployeeStatus::all(); // ✔ تعديل
+        $statuses = EmployeeStatus::all();
 
         return view('hr.employees.edit', compact('employee', 'departments', 'roles', 'statuses'));
     }
 
     // ============================
-    //        UPDATE EMPLOYEE
+    // UPDATE EMPLOYEE
     // ============================
     public function updateEmployee(Request $request, $id)
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $employee = PersonalInformation::findOrFail($id);
 
+        // ⭐ نفس VALIDATION لمنع overflow
         $request->validate([
             'firstName' => 'required',
             'lastName' => 'required',
             'birthday' => 'required',
             'email' => 'required|email',
-            'phone' => 'required',
+            'phone' => 'required|numeric|digits_between:1,10',
+            'national_number' => 'nullable|numeric|digits_between:1,10',
             'department_id' => 'required',
             'role_id' => 'required',
-            'employee_status_id' => 'required', // ✔ تعديل
+            'employee_status_id' => 'required',
         ]);
 
         $data = $request->all();
@@ -121,10 +147,12 @@ class HRController extends Controller
     }
 
     // ============================
-    //        DELETE EMPLOYEE
+    // DELETE EMPLOYEE
     // ============================
     public function deleteEmployee($id)
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $employee = PersonalInformation::findOrFail($id);
 
         if ($employee->department_id !== null) {
@@ -137,24 +165,28 @@ class HRController extends Controller
     }
 
     // ============================
-    //        SHOW EMPLOYEE DETAILS
+    // SHOW EMPLOYEE DETAILS
     // ============================
     public function showEmployee($id)
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $employee = PersonalInformation::findOrFail($id);
 
         return view('hr.employees.show', compact('employee'));
     }
 
     // ============================
-    //        SEARCH EMPLOYEES (AJAX)
+    // SEARCH EMPLOYEES (AJAX)
     // ============================
     public function searchEmployees(Request $request)
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $firstName = $request->firstName ?: null;
         $department_id = $request->department_id ?: null;
         $role_id = $request->role_id ?: null;
-        $employee_status_id = $request->employee_status_id ?: null; // ✔ تعديل
+        $employee_status_id = $request->employee_status_id ?: null;
 
         $employees = DB::select('EXEC SP_SearchEmployees ?, ?, ?, ?', [
             $firstName,
@@ -167,10 +199,12 @@ class HRController extends Controller
     }
 
     // ============================
-    //        MANAGE DEPARTMENTS
+    // MANAGE DEPARTMENTS
     // ============================
     public function departments()
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $departments = Department::all();
 
         return view('hr.departments.index', compact('departments'));
@@ -178,6 +212,8 @@ class HRController extends Controller
 
     public function storeDepartment(Request $request)
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $request->validate([
             'department_name' => 'required',
         ]);
@@ -191,6 +227,8 @@ class HRController extends Controller
 
     public function updateDepartment(Request $request, $id)
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $request->validate([
             'department_name' => 'required',
         ]);
@@ -204,6 +242,8 @@ class HRController extends Controller
 
     public function deleteDepartment($id)
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $count = PersonalInformation::where('department_id', $id)->count();
 
         if ($count > 0) {
@@ -216,10 +256,12 @@ class HRController extends Controller
     }
 
     // ============================
-    //        MANAGE ROLES
+    // MANAGE ROLES
     // ============================
     public function roles()
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $roles = Role::all();
 
         return view('hr.roles.index', compact('roles'));
@@ -227,6 +269,8 @@ class HRController extends Controller
 
     public function storeRole(Request $request)
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $request->validate([
             'role_name' => 'required',
         ]);
@@ -240,6 +284,8 @@ class HRController extends Controller
 
     public function updateRole(Request $request, $id)
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $request->validate([
             'role_name' => 'required',
         ]);
@@ -253,6 +299,8 @@ class HRController extends Controller
 
     public function deleteRole($id)
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $count = PersonalInformation::where('role_id', $id)->count();
 
         if ($count > 0) {
@@ -265,17 +313,21 @@ class HRController extends Controller
     }
 
     // ============================
-    //        EMPLOYEE STATUS
+    // EMPLOYEE STATUS
     // ============================
     public function status()
     {
-        $statuses = EmployeeStatus::all(); // ✔ تعديل
+        if ($redirect = $this->checkLogin()) return $redirect;
+
+        $statuses = EmployeeStatus::all();
 
         return view('hr.status.index', compact('statuses'));
     }
 
     public function storeStatus(Request $request)
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $request->validate([
             'status_name' => 'required',
         ]);
@@ -289,6 +341,8 @@ class HRController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $request->validate([
             'status_name' => 'required',
         ]);
@@ -302,6 +356,8 @@ class HRController extends Controller
 
     public function deleteStatus($id)
     {
+        if ($redirect = $this->checkLogin()) return $redirect;
+
         $count = PersonalInformation::where('employee_status_id', $id)->count();
 
         if ($count > 0) {

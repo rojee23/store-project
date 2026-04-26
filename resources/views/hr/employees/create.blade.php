@@ -35,6 +35,18 @@
 
         <div class="card-body">
 
+            <!-- ⭐ عرض الأخطاء -->
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <strong>There were some problems with your input:</strong>
+                    <ul class="mt-2 mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="{{ route('hr.employee.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
