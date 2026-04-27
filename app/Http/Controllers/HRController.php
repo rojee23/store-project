@@ -8,6 +8,7 @@ use App\Models\PersonalInformation;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class HRController extends Controller
 {
@@ -27,7 +28,6 @@ class HRController extends Controller
     public function dashboard()
     {
         if ($redirect = $this->checkLogin()) return $redirect;
-
         return view('hr.dashboard');
     }
 
@@ -67,22 +67,47 @@ class HRController extends Controller
     {
         if ($redirect = $this->checkLogin()) return $redirect;
 
-        // ⭐ VALIDATION لمنع overflow
+        // ⭐ VALIDATION
         $request->validate([
             'firstName' => 'required',
             'lastName' => 'required',
-            'birthday' => 'required',
+            'birthday' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    $age = Carbon::parse($value)->age;
+                    if ($age < 18 || $age > 60) {
+                        $fail('Age must be between 18 and 60 years.');
+                    }
+                }
+            ],
             'email' => 'required|email',
             'phone' => 'required|numeric|digits_between:1,10',
             'national_number' => 'nullable|numeric|digits_between:1,10',
+            'salary' => 'nullable|numeric|min:0',
             'department_id' => 'required',
             'role_id' => 'required',
             'employee_status_id' => 'required',
         ]);
 
-        $data = $request->all();
+        // ⭐ ONLY the fields we want
+        $data = $request->only([
+            'firstName',
+            'lastName',
+            'father',
+            'mother',
+            'birthday',
+            'gender',
+            'national_number',
+            'phone',
+            'email',
+            'address',
+            'salary',
+            'department_id',
+            'role_id',
+            'employee_status_id',
+        ]);
 
-        // رفع الصورة
+        // Upload photo
         if ($request->hasFile('upload_file')) {
             $file = $request->file('upload_file');
             $filename = time() . '_' . $file->getClientOriginalName();
@@ -119,21 +144,47 @@ class HRController extends Controller
 
         $employee = PersonalInformation::findOrFail($id);
 
-        // ⭐ نفس VALIDATION لمنع overflow
+        // ⭐ VALIDATION
         $request->validate([
             'firstName' => 'required',
             'lastName' => 'required',
-            'birthday' => 'required',
+            'birthday' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    $age = Carbon::parse($value)->age;
+                    if ($age < 18 || $age > 60) {
+                        $fail('Age must be between 18 and 60 years.');
+                    }
+                }
+            ],
             'email' => 'required|email',
             'phone' => 'required|numeric|digits_between:1,10',
             'national_number' => 'nullable|numeric|digits_between:1,10',
+            'salary' => 'nullable|numeric|min:0',
             'department_id' => 'required',
             'role_id' => 'required',
             'employee_status_id' => 'required',
         ]);
 
-        $data = $request->all();
+        // ⭐ ONLY the fields we want
+        $data = $request->only([
+            'firstName',
+            'lastName',
+            'father',
+            'mother',
+            'birthday',
+            'gender',
+            'national_number',
+            'phone',
+            'email',
+            'address',
+            'salary',
+            'department_id',
+            'role_id',
+            'employee_status_id',
+        ]);
 
+        // Upload new photo
         if ($request->hasFile('upload_file')) {
             $file = $request->file('upload_file');
             $filename = time() . '_' . $file->getClientOriginalName();
@@ -149,20 +200,21 @@ class HRController extends Controller
     // ============================
     // DELETE EMPLOYEE
     // ============================
-    public function deleteEmployee($id)
-    {
-        if ($redirect = $this->checkLogin()) return $redirect;
+ public function deleteEmployee($id)
+{
+    if ($redirect = $this->checkLogin()) return $redirect;
 
-        $employee = PersonalInformation::findOrFail($id);
+    $employee = PersonalInformation::findOrFail($id);
 
-        if ($employee->department_id !== null) {
-            return redirect()->back()->with('error', 'Cannot delete employee assigned to a department');
-        }
-
-        $employee->delete();
-
-        return redirect()->route('hr.employees')->with('success', 'Employee deleted successfully');
+    // ⭐ الشرط المطلوب
+    if ($employee->department_id !== null) {
+        return back()->with('error', 'Cannot delete employee assigned to a department.');
     }
+
+    $employee->delete();
+
+    return redirect()->route('hr.employees')->with('success', 'Employee deleted successfully');
+}
 
     // ============================
     // SHOW EMPLOYEE DETAILS
@@ -188,12 +240,10 @@ class HRController extends Controller
         $role_id = $request->role_id ?: null;
         $employee_status_id = $request->employee_status_id ?: null;
 
-        $employees = DB::select('EXEC SP_SearchEmployees ?, ?, ?, ?', [
-            $firstName,
-            $department_id,
-            $role_id,
-            $employee_status_id,
-        ]);
+        $employees = DB::select(
+            'EXEC SP_SearchEmployees ?, ?, ?, ?',
+            [$firstName, $department_id, $role_id, $employee_status_id]
+        );
 
         return response()->json($employees);
     }
@@ -206,7 +256,6 @@ class HRController extends Controller
         if ($redirect = $this->checkLogin()) return $redirect;
 
         $departments = Department::all();
-
         return view('hr.departments.index', compact('departments'));
     }
 
@@ -214,13 +263,9 @@ class HRController extends Controller
     {
         if ($redirect = $this->checkLogin()) return $redirect;
 
-        $request->validate([
-            'department_name' => 'required',
-        ]);
+        $request->validate(['department_name' => 'required']);
 
-        Department::create([
-            'department_name' => $request->department_name,
-        ]);
+        Department::create(['department_name' => $request->department_name]);
 
         return back()->with('success', 'Department added successfully');
     }
@@ -229,12 +274,10 @@ class HRController extends Controller
     {
         if ($redirect = $this->checkLogin()) return $redirect;
 
-        $request->validate([
-            'department_name' => 'required',
-        ]);
+        $request->validate(['department_name' => 'required']);
 
         Department::where('department_id', $id)->update([
-            'department_name' => $request->department_name,
+            'department_name' => $request->department_name
         ]);
 
         return back()->with('success', 'Department updated successfully');
@@ -263,7 +306,6 @@ class HRController extends Controller
         if ($redirect = $this->checkLogin()) return $redirect;
 
         $roles = Role::all();
-
         return view('hr.roles.index', compact('roles'));
     }
 
@@ -271,13 +313,9 @@ class HRController extends Controller
     {
         if ($redirect = $this->checkLogin()) return $redirect;
 
-        $request->validate([
-            'role_name' => 'required',
-        ]);
+        $request->validate(['role_name' => 'required']);
 
-        Role::create([
-            'type' => $request->role_name,
-        ]);
+        Role::create(['type' => $request->role_name]);
 
         return back()->with('success', 'Role added successfully');
     }
@@ -286,13 +324,9 @@ class HRController extends Controller
     {
         if ($redirect = $this->checkLogin()) return $redirect;
 
-        $request->validate([
-            'role_name' => 'required',
-        ]);
+        $request->validate(['role_name' => 'required']);
 
-        Role::where('role_id', $id)->update([
-            'type' => $request->role_name,
-        ]);
+        Role::where('role_id', $id)->update(['type' => $request->role_name]);
 
         return back()->with('success', 'Role updated successfully');
     }
@@ -320,7 +354,6 @@ class HRController extends Controller
         if ($redirect = $this->checkLogin()) return $redirect;
 
         $statuses = EmployeeStatus::all();
-
         return view('hr.status.index', compact('statuses'));
     }
 
@@ -328,13 +361,9 @@ class HRController extends Controller
     {
         if ($redirect = $this->checkLogin()) return $redirect;
 
-        $request->validate([
-            'status_name' => 'required',
-        ]);
+        $request->validate(['status_name' => 'required']);
 
-        EmployeeStatus::create([
-            'status' => $request->status_name,
-        ]);
+        EmployeeStatus::create(['status' => $request->status_name]);
 
         return back()->with('success', 'Status added successfully');
     }
@@ -343,12 +372,10 @@ class HRController extends Controller
     {
         if ($redirect = $this->checkLogin()) return $redirect;
 
-        $request->validate([
-            'status_name' => 'required',
-        ]);
+        $request->validate(['status_name' => 'required']);
 
         EmployeeStatus::where('employee_status_id', $id)->update([
-            'status' => $request->status_name,
+            'status' => $request->status_name
         ]);
 
         return back()->with('success', 'Status updated successfully');

@@ -3,6 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\EmployeeStatus;
+use App\Models\Department;
+use App\Models\Role;
+use App\Models\Warehouse;
+use App\Models\Store;
+use App\Models\CustomerStatus;
+use App\Models\CustomerType;
+use App\Models\Offer;
 
 class PersonalInformation extends Model
 {
@@ -24,10 +33,11 @@ class PersonalInformation extends Model
         'address',
         'salary',
         'upload_file',
-        'store_id',            // ✔ التصحيح المهم
+        'store_id',
         'role_id',
         'department_id',
         'warehouse_id',
+        'employee_status_id',   // ✔ مهم جداً
         'customer_status_id',
         'customer_type_id',
         'user_id',
@@ -46,7 +56,7 @@ class PersonalInformation extends Model
     // Store
     public function store()
     {
-        return $this->belongsTo(Store::class, 'store_id', 'store_id'); // ✔ التصحيح
+        return $this->belongsTo(Store::class, 'store_id', 'store_id');
     }
 
     // Role
@@ -65,6 +75,12 @@ class PersonalInformation extends Model
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class, 'warehouse_id', 'warehouse_id');
+    }
+
+    // ⭐ Employee Status (العلاقة الصحيحة)
+    public function employeeStatus()
+    {
+        return $this->belongsTo(EmployeeStatus::class, 'employee_status_id', 'employee_status_id');
     }
 
     // Customer Status

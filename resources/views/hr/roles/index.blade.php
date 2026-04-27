@@ -4,51 +4,37 @@
     <meta charset="UTF-8">
     <title>Manage Roles</title>
 
-    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Theme -->
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
 </head>
 
 <body>
 
-<!-- Background shapes -->
-<div class="shape"></div>
-<div class="shape"></div>
-<div class="shape"></div>
-<div class="shape"></div>
+<div class="shape"></div><div class="shape"></div><div class="shape"></div><div class="shape"></div>
 
 <div class="login-container">
     <div class="login-card">
 
         <div class="card-header">
-            <div class="header-icon">
-                <i class="fas fa-id-badge"></i>
-            </div>
+            <div class="header-icon"><i class="fas fa-id-badge"></i></div>
             <h2>Manage Roles</h2>
             <p>Roles Management</p>
         </div>
 
         <div class="card-body">
 
-            <!-- Back Button -->
             <div class="mb-3">
                 <a href="{{ route('hr.dashboard') }}" class="btn-back">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard
                 </a>
             </div>
 
-            <!-- Add Role Button -->
             <button class="btn-login mb-3 w-100" data-bs-toggle="modal" data-bs-target="#addRoleModal">
                 <span>Add New Role</span>
                 <i class="fas fa-plus"></i>
             </button>
 
-            <!-- Roles Table -->
             <div class="table-responsive">
                 <table class="table table-bordered text-center bg-white">
                     <thead class="table-dark">
@@ -63,59 +49,23 @@
                         @foreach($roles as $role)
                             <tr>
                                 <td>{{ $role->role_id }}</td>
-
-                                <!-- FIXED: use 'type' instead of 'role_name' -->
                                 <td>{{ $role->type }}</td>
 
                                 <td>
-                                    <!-- Edit -->
-                                    <button class="btn btn-warning btn-sm"
+                                    <button class="btn btn-warning btn-sm editBtn"
+                                            data-id="{{ $role->role_id }}"
+                                            data-name="{{ $role->type }}"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#editRoleModal{{ $role->role_id }}">
+                                            data-bs-target="#editRoleModal">
                                         <i class="fas fa-edit"></i>
                                     </button>
 
-                                    <!-- Delete -->
                                     <a href="/hr/roles/delete/{{ $role->role_id }}"
                                        class="btn btn-danger btn-sm">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
                             </tr>
-
-                            <!-- Edit Modal -->
-                            <div class="modal fade" id="editRoleModal{{ $role->role_id }}">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-                                            <h5>Edit Role</h5>
-                                            <button class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-
-                                        <form action="/hr/roles/update/{{ $role->role_id }}" method="POST">
-                                            @csrf
-
-                                            <div class="modal-body">
-                                                <label class="form-label">Role Name</label>
-
-                                                <!-- FIXED: use value="{{ $role->type }}" -->
-                                                <input type="text" name="role_name"
-                                                       class="form-control"
-                                                       value="{{ $role->type }}" required>
-                                            </div>
-
-                                            <div class="modal-footer">
-                                                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                <button class="btn btn-primary">Save Changes</button>
-                                            </div>
-
-                                        </form>
-
-                                    </div>
-                                </div>
-                            </div>
-
                         @endforeach
                     </tbody>
 
@@ -131,7 +81,7 @@
     </div>
 </div>
 
-<!-- Add Role Modal -->
+<!-- ADD ROLE MODAL -->
 <div class="modal fade" id="addRoleModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -160,8 +110,51 @@
     </div>
 </div>
 
-<!-- Bootstrap JS -->
+<!-- EDIT ROLE MODAL (ONE ONLY) -->
+<div class="modal fade" id="editRoleModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Edit Role</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form id="editRoleForm" method="POST">
+                @csrf
+
+                <div class="modal-body">
+                    <label class="form-label">Role Name</label>
+                    <input type="text" id="editRoleName" name="role_name" class="form-control" required>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary">Save Changes</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.querySelectorAll('.editBtn').forEach(btn => {
+    btn.addEventListener('click', function () {
+
+        let id = this.dataset.id;
+        let name = this.dataset.name;
+
+        document.getElementById('editRoleName').value = name;
+
+        document.getElementById('editRoleForm').action =
+            `/hr/roles/update/${id}`;
+    });
+});
+</script>
 
 </body>
 </html>

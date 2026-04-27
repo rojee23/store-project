@@ -169,11 +169,19 @@ document.getElementById('searchBtn').addEventListener('click', function () {
                 table.innerHTML += `
                     <tr>
                         <td>${emp.personal_id}</td>
-                        <td><i class="fas fa-user-circle fa-2x"></i></td>
+
+                        <td>
+                            ${emp.upload_file
+                                ? `<img src="/uploads/employees/${emp.upload_file}" width="50" height="50" class="rounded-circle">`
+                                : `<i class="fas fa-user-circle fa-2x"></i>`
+                            }
+                        </td>
+
                         <td>${emp.firstName} ${emp.lastName}</td>
-                        <td>${emp.department_id ?? '-'}</td>
-                        <td>${emp.role_id ?? '-'}</td>
-                        <td>${emp.employee_status_id ?? '-'}</td>
+                        <td>${emp.department_name ?? '-'}</td>
+                        <td>${emp.role_name ?? '-'}</td>
+                        <td>${emp.employee_status ?? '-'}</td>
+
                         <td>
                             <a href="/hr/employee/show/${emp.personal_id}" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
                             <a href="/hr/employee/edit/${emp.personal_id}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
