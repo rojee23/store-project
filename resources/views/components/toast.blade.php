@@ -1,10 +1,12 @@
-<!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- Toast Script -->
 @if(session('toast'))
 <script>
-    const toastData = {!! session('toast') !!};
+    const toastData = {
+        type: "{{ session('toast')['type'] ?? 'info' }}",
+        message: "{{ session('toast')['message'] ?? '' }}"
+    };
+
     showToast(toastData.type, toastData.message);
 </script>
 @endif
@@ -13,7 +15,9 @@
 function showToast(type, message) {
     const container = document.getElementById('toastContainer');
     const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
+
+    // استخدم my-toast بدل toast
+    toast.className = `my-toast ${type}`;
 
     let icon = '';
     if(type === 'success') icon = 'fas fa-check-circle';

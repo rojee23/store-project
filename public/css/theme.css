@@ -253,7 +253,9 @@ body {
     align-items: center;
     gap: 12px;
     min-width: 280px;
-    animation: slideIn 0.4s ease, fadeOut 0.4s ease 3.6s forwards;
+    animation:
+        slideIn 0.4s ease,
+        fadeOut 0.4s ease 3.6s forwards;
 }
 
 .my-toast i {

@@ -15,18 +15,18 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+        // التحقق من الإدخال
         $request->validate([
             'username' => 'required',
             'password' => 'required'
         ]);
 
-        $username = $request->username;
-        $password = $request->password;
-
+        // جلب المستخدم من جدول USER
         $user = DB::table('USER')
-            ->where('username', $username)
+            ->where('username', $request->username)
             ->first();
 
+        // التحقق من وجود المستخدم
         if (!$user) {
             return back()->with('toast', [
                 'type' => 'error',
@@ -34,13 +34,15 @@ class LoginController extends Controller
             ]);
         }
 
-        if ($user->password !== $password) {
+        // التحقق من كلمة المرور
+        if ($user->password !== $request->password) {
             return back()->with('toast', [
                 'type' => 'error',
                 'message' => 'Incorrect password'
             ]);
         }
 
+        // التحقق من حالة الحساب
         if ($user->account_status != 1) {
             return back()->with('toast', [
                 'type' => 'error',
@@ -48,10 +50,45 @@ class LoginController extends Controller
             ]);
         }
 
+        // جلب بيانات الموظف من PERSONAL_INFORMATION
+        $person = DB::table('PERSONAL_INFORMATION')
+            ->where('user_id', $user->user_id)
+            ->first();
+
+        if (!$person) {
+            return back()->with('toast', [
+                'type' => 'error',
+                'message' => 'No personal information found for this user'
+            ]);
+        }
+
+        // جلب الدور من جدول ROLE
+        $role = DB::table('ROLE')
+            ->where('role_id', $person->role_id)
+            ->first();
+
+        // تخزين الجلسة
         Session::put('user_id', $user->user_id);
         Session::put('username', $user->username);
         Session::put('logged_in', true);
+        Session::put('role_type', $role->type); // مثال: HR Officer, Manager, Employee...
 
+        // التوجيه حسب الدور
+        if ($role->type === 'HR Officer') {
+            return redirect()->route('hr.dashboard')->with('toast', [
+                'type' => 'success',
+                'message' => 'Login successful!'
+            ]);
+        }
+
+        if ($role->type === 'Manager') {
+            return redirect()->route('stores.index')->with('toast', [
+                'type' => 'success',
+                'message' => 'Login successful!'
+            ]);
+        }
+
+        // باقي الأدوار → نفس الـ dashboard
         return redirect()->route('hr.dashboard')->with('toast', [
             'type' => 'success',
             'message' => 'Login successful!'

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Multi-Branch E-Store</title>
 
+    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
@@ -31,7 +33,6 @@
             overflow: hidden;
         }
 
-        /* Background shapes */
         .shape {
             position: absolute;
             border-radius: 50%;
@@ -51,7 +52,6 @@
             75% { transform: translate(20px,-40px) scale(1.05); }
         }
 
-        /* Login card */
         .login-container {
             width: 100%;
             max-width: 450px;
@@ -65,7 +65,7 @@
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow-y: auto;
-            max-height: 85vh; /* ← تصغير الكارد */
+            max-height: 85vh;
             animation: fadeIn 0.6s ease;
         }
 
@@ -74,10 +74,9 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Header */
         .card-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px 20px; /* ← تصغير */
+            padding: 30px 20px;
             text-align: center;
             clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
         }
@@ -107,9 +106,8 @@
             font-size: 14px;
         }
 
-        /* Body */
         .card-body {
-            padding: 25px 20px; /* ← تصغير */
+            padding: 25px 20px;
         }
 
         .form-group {
@@ -135,7 +133,6 @@
             background: #f8f9fa;
         }
 
-        /* Login button */
         .btn-login {
             width: 100%;
             padding: 14px;
@@ -149,7 +146,6 @@
             cursor: pointer;
         }
 
-        /* Footer */
         .card-footer {
             padding: 15px 20px;
             text-align: center;
@@ -170,7 +166,6 @@
 <div class="login-container">
     <div class="login-card">
 
-        <!-- Header -->
         <div class="card-header">
             <div class="header-icon">
                 <i class="fas fa-store-alt"></i>
@@ -179,15 +174,7 @@
             <p>Management System</p>
         </div>
 
-        <!-- Body -->
         <div class="card-body">
-
-            @if(session('error'))
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-circle"></i>
-                    {{ session('error') }}
-                </div>
-            @endif
 
             <form method="POST" action="{{ route('login.action') }}">
                 @csrf
@@ -223,6 +210,9 @@
 
     </div>
 </div>
+
+{{-- Toast Component (المكان الصحيح) --}}
+@include('components.toast')
 
 </body>
 </html>

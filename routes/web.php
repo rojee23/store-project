@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HRController;
 
+use App\Http\Controllers\StoreController;
+use App\Http\Controllers\ProvinceController;
 /*
 |--------------------------------------------------------------------------
 | Login Routes
@@ -16,7 +18,7 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
-| HR Routes (بدون Middleware)
+| HR Routes
 |--------------------------------------------------------------------------
 */
 
@@ -63,3 +65,35 @@ Route::get('/hr/status', [HRController::class, 'status'])->name('hr.status');
 Route::post('/hr/status/store', [HRController::class, 'storeStatus'])->name('hr.status.store');
 Route::post('/hr/status/update/{id}', [HRController::class, 'updateStatus'])->name('hr.status.update');
 Route::get('/hr/status/delete/{id}', [HRController::class, 'deleteStatus'])->name('hr.status.delete');
+
+/*
+|--------------------------------------------------------------------------
+| Provinces & Stores k3
+|-------------------------------------------------------------------------- */
+
+// ============================
+//  Stores Statistics
+// ============================
+Route::get('/stores/statistics', [StoreController::class, 'statistics'])->name('stores.statistics');
+
+// ============================
+//  Stores Management
+// ============================
+Route::resource('stores', StoreController::class);
+
+// ============================
+//  Provinces Management
+// ============================
+Route::resource('provinces', ProvinceController::class);
+
+// ============================
+//  Stores API
+// ============================
+Route::prefix('api')->group(function () {
+    Route::get('/stores/search', [StoreController::class, 'apiSearch']);
+    Route::get('/stores', [StoreController::class, 'apiIndex']);
+    Route::post('/stores', [StoreController::class, 'apiStore']);
+    Route::get('/stores/{id}', [StoreController::class, 'apiShow']);
+    Route::put('/stores/{id}', [StoreController::class, 'apiUpdate']);
+    Route::delete('/stores/{id}', [StoreController::class, 'apiDestroy']);
+});
