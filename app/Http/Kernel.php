@@ -37,5 +37,10 @@ class Kernel extends HttpKernel
     /**
      * The application's middleware aliases.
      */
-    
+    protected function middlewareAliases(): array
+    {
+        return [
+            // لا يوجد أي middleware مخصص
+        ];
+    }
 }

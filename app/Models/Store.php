@@ -25,7 +25,7 @@ class Store extends Model
     // Employees (Personal Information)
     public function employees()
     {
-        return $this->hasMany(PersonalInformation::class, 'stores_id', 'store_id');
+       return $this->hasMany(PersonalInformation::class, 'store_id', 'store_id');
         // ملاحظة: حسب الـ ERD العمود اسمو stores_id داخل personal_information
     }
 
