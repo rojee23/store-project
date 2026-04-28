@@ -147,6 +147,155 @@ body {
     transform: translateX(5px);
 }
 
+/* Logout Button - مطابق للـ Theme */
+.btn-logout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, #667eea, #764ba2) !important;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 500;
+    color: #fff !important;
+    transition: 0.3s ease;
+    border: none;
+}
+
+.btn-logout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-logout i {
+    transition: 0.3s ease;
+}
+
+.btn-logout:hover i {
+    transform: translateX(5px);
+}
+
+/* ===============================
+   ACTION BUTTONS - احلى وأجمل
+=================================*/
+.btn-action-sm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-action-sm:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* View Button - أزرق */
+.btn-view {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.btn-view:hover {
+    background: #1976d2;
+    color: #fff;
+}
+
+/* Edit Button - برتقالي */
+.btn-edit {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.btn-edit:hover {
+    background: #f57c00;
+    color: #fff;
+}
+
+/* Delete Button - أحمر */
+.btn-delete {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.btn-delete:hover {
+    background: #d32f2f;
+    color: #fff;
+}
+
+/* ===============================
+   TOAST NOTIFICATIONS - رسائل مرتبة
+=================================*/
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.my-toast {
+    padding: 16px 24px;
+    border-radius: 12px;
+    color: #fff;
+    font-weight: 500;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 280px;
+    animation: slideIn 0.4s ease, fadeOut 0.4s ease 3.6s forwards;
+}
+
+.my-toast i {
+    font-size: 18px;
+}
+
+.my-toast.success {
+    background: linear-gradient(135deg, #4caf50, #45a049);
+}
+
+.my-toast.error {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+}
+
+.my-toast.info {
+    background: linear-gradient(135deg, #2196f3, #1976d2);
+}
+
+.my-toast.warning {
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        transform: translateX(50%);
+    }
+}
 /* ===============================
    FORM CONTROL
 =================================*/

@@ -16,6 +16,9 @@
 
 <body>
 
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
 <!-- Background shapes -->
 <div class="shape"></div>
 <div class="shape"></div>
@@ -65,18 +68,21 @@
                                 <td>{{ $dep->department_id }}</td>
                                 <td>{{ $dep->department_name }}</td>
                                 <td>
+
                                     <!-- Edit -->
-                                    <button class="btn btn-warning btn-sm"
+                                    <button class="btn-action-sm btn-edit"
                                             data-bs-toggle="modal"
                                             data-bs-target="#editDepartmentModal{{ $dep->department_id }}">
                                         <i class="fas fa-edit"></i>
                                     </button>
 
                                     <!-- Delete -->
-                                    <a href="/hr/departments/delete/{{ $dep->department_id }}"
-                                       class="btn btn-danger btn-sm">
+                                    <a onclick="return confirm('Are you sure you want to delete this department?')"
+                                       href="{{ route('hr.departments.delete', $dep->department_id) }}"
+                                       class="btn-action-sm btn-delete">
                                         <i class="fas fa-trash"></i>
                                     </a>
+
                                 </td>
                             </tr>
                         @endforeach
@@ -104,7 +110,7 @@
                 <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <form action="/hr/departments/store" method="POST">
+            <form action="{{ route('hr.departments.store') }}" method="POST">
                 @csrf
 
                 <div class="modal-body">
@@ -123,7 +129,7 @@
     </div>
 </div>
 
-<!-- Edit Modals (Moved OUTSIDE table to fix input issue) -->
+<!-- Edit Modals -->
 @foreach($departments as $dep)
 <div class="modal fade" id="editDepartmentModal{{ $dep->department_id }}">
     <div class="modal-dialog">
@@ -134,7 +140,7 @@
                 <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <form action="/hr/departments/update/{{ $dep->department_id }}" method="POST">
+            <form action="{{ route('hr.departments.update', $dep->department_id) }}" method="POST">
                 @csrf
 
                 <div class="modal-body">

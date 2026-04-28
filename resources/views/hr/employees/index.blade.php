@@ -16,6 +16,9 @@
 
 <body>
 
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
 <!-- Background shapes -->
 <div class="shape"></div>
 <div class="shape"></div>
@@ -121,15 +124,15 @@
                                 <td>{{ $emp->employeeStatus->status ?? '-' }}</td>
 
                                 <td>
-                                    <a href="{{ route('hr.employee.show', $emp->personal_id) }}" class="btn btn-sm btn-info">
+                                    <a href="{{ route('hr.employee.show', $emp->personal_id) }}" class="btn-action-sm btn-view" title="View">
                                         <i class="fas fa-eye"></i>
                                     </a>
 
-                                    <a href="{{ route('hr.employee.edit', $emp->personal_id) }}" class="btn btn-sm btn-warning">
+                                    <a href="{{ route('hr.employee.edit', $emp->personal_id) }}" class="btn-action-sm btn-edit" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
 
-                                    <a href="{{ route('hr.employee.delete', $emp->personal_id) }}" class="btn btn-sm btn-danger">
+                                    <a href="{{ route('hr.employee.delete', $emp->personal_id) }}" class="btn-action-sm btn-delete" title="Delete" onclick="return confirm('Are you sure?')">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
@@ -183,9 +186,9 @@ document.getElementById('searchBtn').addEventListener('click', function () {
                         <td>${emp.employee_status ?? '-'}</td>
 
                         <td>
-                            <a href="/hr/employee/show/${emp.personal_id}" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
-                            <a href="/hr/employee/edit/${emp.personal_id}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
-                            <a href="/hr/employee/delete/${emp.personal_id}" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                            <a href="/hr/employee/show/${emp.personal_id}" class="btn-action-sm btn-view" title="View"><i class="fas fa-eye"></i></a>
+                            <a href="/hr/employee/edit/${emp.personal_id}" class="btn-action-sm btn-edit" title="Edit"><i class="fas fa-edit"></i></a>
+                            <a href="/hr/employee/delete/${emp.personal_id}" class="btn-action-sm btn-delete" title="Delete" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
                 `;
@@ -194,6 +197,35 @@ document.getElementById('searchBtn').addEventListener('click', function () {
         });
 
 });
+</script>
+
+<!-- Toast Script -->
+@if(session('toast'))
+<script>
+    const toastData = {!! session('toast') !!};
+    showToast(toastData.type, toastData.message);
+</script>
+@endif
+
+<script>
+function showToast(type, message) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+
+    let icon = '';
+    if(type === 'success') icon = 'fas fa-check-circle';
+    else if(type === 'error') icon = 'fas fa-times-circle';
+    else if(type === 'info') icon = 'fas fa-info-circle';
+    else if(type === 'warning') icon = 'fas fa-exclamation-triangle';
+
+    toast.innerHTML = `<i class="${icon}"></i><span>${message}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 4000);
+}
 </script>
 
 </body>

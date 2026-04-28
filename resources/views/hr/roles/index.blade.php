@@ -52,7 +52,8 @@
                                 <td>{{ $role->type }}</td>
 
                                 <td>
-                                    <button class="btn btn-warning btn-sm editBtn"
+                                    <!-- Edit -->
+                                    <button class="btn-action-sm btn-edit editBtn"
                                             data-id="{{ $role->role_id }}"
                                             data-name="{{ $role->type }}"
                                             data-bs-toggle="modal"
@@ -60,8 +61,10 @@
                                         <i class="fas fa-edit"></i>
                                     </button>
 
-                                    <a href="/hr/roles/delete/{{ $role->role_id }}"
-                                       class="btn btn-danger btn-sm">
+                                    <!-- Delete -->
+                                    <a onclick="return confirm('Are you sure you want to delete this role?')"
+                                       href="{{ route('hr.roles.delete', $role->role_id) }}"
+                                       class="btn-action-sm btn-delete">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
@@ -91,7 +94,7 @@
                 <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <form action="/hr/roles/store" method="POST">
+            <form action="{{ route('hr.roles.store') }}" method="POST">
                 @csrf
 
                 <div class="modal-body">
@@ -110,7 +113,7 @@
     </div>
 </div>
 
-<!-- EDIT ROLE MODAL (ONE ONLY) -->
+<!-- EDIT ROLE MODAL -->
 <div class="modal fade" id="editRoleModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -151,7 +154,7 @@ document.querySelectorAll('.editBtn').forEach(btn => {
         document.getElementById('editRoleName').value = name;
 
         document.getElementById('editRoleForm').action =
-            `/hr/roles/update/${id}`;
+            "{{ url('/hr/roles/update') }}/" + id;
     });
 });
 </script>

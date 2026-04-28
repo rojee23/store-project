@@ -52,7 +52,9 @@
                                 <td>{{ $status->status }}</td>
 
                                 <td>
-                                    <button class="btn btn-warning btn-sm editBtn"
+
+                                    <!-- EDIT BUTTON (same as Roles) -->
+                                    <button class="btn-action-sm btn-edit editBtn"
                                             data-id="{{ $status->employee_status_id }}"
                                             data-name="{{ $status->status }}"
                                             data-bs-toggle="modal"
@@ -60,10 +62,13 @@
                                         <i class="fas fa-edit"></i>
                                     </button>
 
+                                    <!-- DELETE BUTTON (same as Roles) -->
                                     <a href="/hr/status/delete/{{ $status->employee_status_id }}"
-                                       class="btn btn-danger btn-sm">
+                                       class="btn-action-sm btn-delete"
+                                       onclick="return confirm('Are you sure you want to delete this status?')">
                                         <i class="fas fa-trash"></i>
                                     </a>
+
                                 </td>
                             </tr>
                         @endforeach
@@ -110,7 +115,7 @@
     </div>
 </div>
 
-<!-- EDIT STATUS MODAL (ONE ONLY) -->
+<!-- EDIT STATUS MODAL -->
 <div class="modal fade" id="editStatusModal">
     <div class="modal-dialog">
         <div class="modal-content">

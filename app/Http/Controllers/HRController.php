@@ -38,10 +38,10 @@ class HRController extends Controller
     {
         if ($redirect = $this->checkLogin()) return $redirect;
 
-        $employees = PersonalInformation::whereNotNull('department_id')->get();
+        $employees   = PersonalInformation::all();
         $departments = Department::all();
-        $roles = Role::all();
-        $statuses = EmployeeStatus::all();
+        $roles       = Role::all();
+        $statuses    = EmployeeStatus::all();
 
         return view('hr.employees.index', compact('employees', 'departments', 'roles', 'statuses'));
     }
@@ -54,8 +54,8 @@ class HRController extends Controller
         if ($redirect = $this->checkLogin()) return $redirect;
 
         $departments = Department::all();
-        $roles = Role::all();
-        $statuses = EmployeeStatus::all();
+        $roles       = Role::all();
+        $statuses    = EmployeeStatus::all();
 
         return view('hr.employees.create', compact('departments', 'roles', 'statuses'));
     }
@@ -67,57 +67,55 @@ class HRController extends Controller
     {
         if ($redirect = $this->checkLogin()) return $redirect;
 
-        // ⭐ VALIDATION
+        // VALIDATION
         $request->validate([
-            'firstName' => 'required',
-            'lastName' => 'required',
-            'birthday' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    $age = Carbon::parse($value)->age;
-                    if ($age < 18 || $age > 60) {
-                        $fail('Age must be between 18 and 60 years.');
-                    }
+            'firstName'          => 'required',
+            'lastName'           => 'required',
+            'birthday'           => ['required', function ($attribute, $value, $fail) {
+                $age = Carbon::parse($value)->age;
+                if ($age < 18 || $age > 60) {
+                    $fail('Age must be between 18 and 60 years.');
                 }
-            ],
-            'email' => 'required|email',
-            'phone' => 'required|numeric|digits_between:1,10',
-            'national_number' => 'nullable|numeric|digits_between:1,10',
-            'salary' => 'nullable|numeric|min:0',
-            'department_id' => 'required',
-            'role_id' => 'required',
+            }],
+            'email'              => 'required|email',
+            'phone'              => 'required|numeric|digits_between:1,10',
+            'national_number'    => 'nullable|numeric|digits_between:1,10',
+            'salary'             => 'nullable|numeric|min:0',
+            'department_id'      => 'nullable',
+            'role_id'            => 'required',
             'employee_status_id' => 'required',
         ]);
 
-        // ⭐ ONLY the fields we want
-        $data = $request->only([
-            'firstName',
-            'lastName',
-            'father',
-            'mother',
-            'birthday',
-            'gender',
-            'national_number',
-            'phone',
-            'email',
-            'address',
-            'salary',
-            'department_id',
-            'role_id',
-            'employee_status_id',
-        ]);
+// ONLY FIELDS WE WANT
+$data = $request->only([
+    'firstName', 'lastName', 'father', 'mother', 'birthday', 'gender',
+    'national_number', 'phone', 'email', 'address', 'salary',
+    'department_id', 'role_id', 'employee_status_id'
+]);
 
-        // Upload photo
-        if ($request->hasFile('upload_file')) {
-            $file = $request->file('upload_file');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/employees'), $filename);
-            $data['upload_file'] = $filename;
-        }
+// Prevent NULL values for SQL Server NOT NULL columns
+$data['father'] = $request->father ?? '';
+$data['mother'] = $request->mother ?? '';
+$data['national_number'] = $request->national_number ?? '';
+$data['address'] = $request->address ?? '';
+$data['salary'] = $request->salary ?? 0;
 
-        PersonalInformation::create($data);
+// Department must be NULL if empty (NOT 0)
+$data['department_id'] = $request->department_id ?: null;
 
-        return redirect()->route('hr.employees')->with('success', 'Employee added successfully');
+// UPLOAD PHOTO
+if ($request->hasFile('upload_file')) {
+    $file     = $request->file('upload_file');
+    $filename = time() . '_' . $file->getClientOriginalName();
+    $file->move(public_path('uploads/employees'), $filename);
+    $data['upload_file'] = $filename;
+}
+
+PersonalInformation::create($data);
+        return redirect()->route('hr.employees')->with('toast', json_encode([
+            'type'    => 'success',
+            'message' => 'Employee added successfully!'
+        ]));
     }
 
     // ============================
@@ -127,10 +125,10 @@ class HRController extends Controller
     {
         if ($redirect = $this->checkLogin()) return $redirect;
 
-        $employee = PersonalInformation::findOrFail($id);
+        $employee    = PersonalInformation::findOrFail($id);
         $departments = Department::all();
-        $roles = Role::all();
-        $statuses = EmployeeStatus::all();
+        $roles       = Role::all();
+        $statuses    = EmployeeStatus::all();
 
         return view('hr.employees.edit', compact('employee', 'departments', 'roles', 'statuses'));
     }
@@ -144,49 +142,34 @@ class HRController extends Controller
 
         $employee = PersonalInformation::findOrFail($id);
 
-        // ⭐ VALIDATION
+        // VALIDATION
         $request->validate([
-            'firstName' => 'required',
-            'lastName' => 'required',
-            'birthday' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    $age = Carbon::parse($value)->age;
-                    if ($age < 18 || $age > 60) {
-                        $fail('Age must be between 18 and 60 years.');
-                    }
+            'firstName'          => 'required',
+            'lastName'           => 'required',
+            'birthday'           => ['required', function ($attribute, $value, $fail) {
+                $age = Carbon::parse($value)->age;
+                if ($age < 18 || $age > 60) {
+                    $fail('Age must be between 18 and 60 years.');
                 }
-            ],
-            'email' => 'required|email',
-            'phone' => 'required|numeric|digits_between:1,10',
-            'national_number' => 'nullable|numeric|digits_between:1,10',
-            'salary' => 'nullable|numeric|min:0',
-            'department_id' => 'required',
-            'role_id' => 'required',
+            }],
+            'email'              => 'required|email',
+            'phone'              => 'required|numeric|digits_between:1,10',
+            'national_number'    => 'nullable|numeric|digits_between:1,10',
+            'salary'             => 'nullable|numeric|min:0',
+            'department_id'      => 'nullable',
+            'role_id'            => 'required',
             'employee_status_id' => 'required',
         ]);
 
-        // ⭐ ONLY the fields we want
         $data = $request->only([
-            'firstName',
-            'lastName',
-            'father',
-            'mother',
-            'birthday',
-            'gender',
-            'national_number',
-            'phone',
-            'email',
-            'address',
-            'salary',
-            'department_id',
-            'role_id',
-            'employee_status_id',
+            'firstName', 'lastName', 'father', 'mother', 'birthday', 'gender',
+            'national_number', 'phone', 'email', 'address', 'salary',
+            'department_id', 'role_id', 'employee_status_id'
         ]);
 
-        // Upload new photo
+        // UPLOAD NEW PHOTO
         if ($request->hasFile('upload_file')) {
-            $file = $request->file('upload_file');
+            $file     = $request->file('upload_file');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads/employees'), $filename);
             $data['upload_file'] = $filename;
@@ -194,27 +177,36 @@ class HRController extends Controller
 
         $employee->update($data);
 
-        return redirect()->route('hr.employees')->with('success', 'Employee updated successfully');
+        return redirect()->route('hr.employees')->with('toast', json_encode([
+            'type'    => 'success',
+            'message' => 'Employee updated successfully!'
+        ]));
     }
 
     // ============================
     // DELETE EMPLOYEE
     // ============================
- public function deleteEmployee($id)
-{
-    if ($redirect = $this->checkLogin()) return $redirect;
+    public function deleteEmployee($id)
+    {
+        if ($redirect = $this->checkLogin()) return $redirect;
 
-    $employee = PersonalInformation::findOrFail($id);
+        $employee = PersonalInformation::findOrFail($id);
 
-    // ⭐ الشرط المطلوب
-    if ($employee->department_id !== null) {
-        return back()->with('error', 'Cannot delete employee assigned to a department.');
+        // REQUIRED CONDITION
+        if ($employee->department_id !== null) {
+            return back()->with('toast', json_encode([
+                'type'    => 'error',
+                'message' => 'Cannot delete employee assigned to a department!'
+            ]));
+        }
+
+        $employee->delete();
+
+        return redirect()->route('hr.employees')->with('toast', json_encode([
+            'type'    => 'success',
+            'message' => 'Employee deleted successfully!'
+        ]));
     }
-
-    $employee->delete();
-
-    return redirect()->route('hr.employees')->with('success', 'Employee deleted successfully');
-}
 
     // ============================
     // SHOW EMPLOYEE DETAILS
@@ -224,20 +216,19 @@ class HRController extends Controller
         if ($redirect = $this->checkLogin()) return $redirect;
 
         $employee = PersonalInformation::findOrFail($id);
-
         return view('hr.employees.show', compact('employee'));
     }
 
     // ============================
-    // SEARCH EMPLOYEES (AJAX)
+    // SEARCH EMPLOYEES (AJAX + SP)
     // ============================
     public function searchEmployees(Request $request)
     {
         if ($redirect = $this->checkLogin()) return $redirect;
 
-        $firstName = $request->firstName ?: null;
-        $department_id = $request->department_id ?: null;
-        $role_id = $request->role_id ?: null;
+        $firstName          = $request->firstName ?: null;
+        $department_id      = $request->department_id ?: null;
+        $role_id            = $request->role_id ?: null;
         $employee_status_id = $request->employee_status_id ?: null;
 
         $employees = DB::select(
@@ -347,7 +338,7 @@ class HRController extends Controller
     }
 
     // ============================
-    // EMPLOYEE STATUS
+    // MANAGE EMPLOYEE STATUS
     // ============================
     public function status()
     {

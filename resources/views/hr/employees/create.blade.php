@@ -42,7 +42,7 @@
                 </a>
             </div>
 
-            <!-- ⭐ عرض الأخطاء -->
+            <!-- Error Messages -->
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <strong>There were some problems with your input:</strong>
@@ -61,68 +61,82 @@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">First Name</label>
-                        <input type="text" name="firstName" class="form-control" required>
+                        <input type="text" name="firstName" class="form-control"
+                               value="{{ old('firstName') }}" required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Last Name</label>
-                        <input type="text" name="lastName" class="form-control" required>
+                        <input type="text" name="lastName" class="form-control"
+                               value="{{ old('lastName') }}" required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Father Name</label>
-                        <input type="text" name="father" class="form-control">
+                        <input type="text" name="father" class="form-control"
+                               value="{{ old('father') }}">
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Mother Name</label>
-                        <input type="text" name="mother" class="form-control">
+                        <input type="text" name="mother" class="form-control"
+                               value="{{ old('mother') }}">
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Birthday</label>
-                        <input type="date" name="birthday" class="form-control" required>
+                        <input type="date" name="birthday" class="form-control"
+                               value="{{ old('birthday') }}" required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Gender</label>
-                        <select name="gender" class="form-select">
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
+                        <select name="gender" class="form-select" required>
+                            <option value="">Select Gender</option>
+                            <option value="male" {{ old('gender')=='male' ? 'selected' : '' }}>Male</option>
+                            <option value="female" {{ old('gender')=='female' ? 'selected' : '' }}>Female</option>
                         </select>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">National Number</label>
-                        <input type="text" name="national_number" class="form-control">
+                        <input type="text" name="national_number" class="form-control"
+                               value="{{ old('national_number') }}">
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Phone</label>
-                        <input type="text" name="phone" class="form-control" required>
+                        <input type="text" name="phone" class="form-control"
+                               value="{{ old('phone') }}" required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" required>
+                        <input type="email" name="email" class="form-control"
+                               value="{{ old('email') }}" required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Address</label>
-                        <input type="text" name="address" class="form-control">
+                        <input type="text" name="address" class="form-control"
+                               value="{{ old('address') }}">
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Salary</label>
-                        <input type="number" name="salary" class="form-control">
+                        <input type="number" name="salary" class="form-control"
+                               value="{{ old('salary') }}">
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Department</label>
-                        <select name="department_id" class="form-select" required>
+                        <select name="department_id" class="form-select">
                             <option value="">Select Department</option>
                             @foreach($departments as $d)
-                                <option value="{{ $d->department_id }}">{{ $d->department_name }}</option>
+                                <option value="{{ $d->department_id }}"
+                                    {{ old('department_id') == $d->department_id ? 'selected' : '' }}>
+                                    {{ $d->department_name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -132,7 +146,10 @@
                         <select name="role_id" class="form-select" required>
                             <option value="">Select Role</option>
                             @foreach($roles as $r)
-                                <option value="{{ $r->role_id }}">{{ $r->type }}</option>
+                                <option value="{{ $r->role_id }}"
+                                    {{ old('role_id') == $r->role_id ? 'selected' : '' }}>
+                                    {{ $r->type }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -142,7 +159,10 @@
                         <select name="employee_status_id" class="form-select" required>
                             <option value="">Select Status</option>
                             @foreach($statuses as $s)
-                                <option value="{{ $s->employee_status_id }}">{{ $s->status }}</option>
+                                <option value="{{ $s->employee_status_id }}"
+                                    {{ old('employee_status_id') == $s->employee_status_id ? 'selected' : '' }}>
+                                    {{ $s->status }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
