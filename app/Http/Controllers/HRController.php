@@ -1,5 +1,10 @@
 <?php
-
+/*
+    Project: Multi-Branch E-Store
+    Student Name:  روچينا بوظو
+    Student ID: 202211280
+    Class: C6
+*/
 namespace App\Http\Controllers;
 
 use App\Models\Department;
