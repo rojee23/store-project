@@ -2,16 +2,20 @@
 @section('title', 'قائمة المحافظات')
 
 @section('content')
+
+{{-- عرض رسائل النجاح --}}
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold"><i class="fas fa-map-marker-alt me-2"></i> قائمة المحافظات</h2>
     <a href="{{ route('provinces.create') }}" class="btn btn-success rounded-pill">
         <i class="fas fa-plus me-1"></i> إضافة محافظة جديدة
     </a>
 </div>
-
-@if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-@endif
 
 <div class="card shadow-sm">
     <div class="card-header bg-primary text-white">
@@ -35,6 +39,7 @@
                         <td>{{ $province->province_id }}</td>
                         <td><strong>{{ $province->province_name }}</strong></td>
                         <td class="text-center">
+
                             <a href="{{ route('provinces.edit', $province->province_id) }}"
                                class="btn btn-sm btn-warning">
                                 <i class="fas fa-edit"></i>
@@ -50,6 +55,7 @@
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
+
                         </td>
                     </tr>
                     @empty
@@ -65,4 +71,5 @@
         </div>
     </div>
 </div>
+
 @endsection

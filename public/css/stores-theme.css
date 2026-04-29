@@ -6,6 +6,7 @@ body {
     font-family: "Segoe UI", sans-serif;
     position: relative;
     min-height: 100vh;
+    z-index: 1;
 }
 
 /* ===============================
@@ -16,7 +17,7 @@ body {
     border-radius: 50%;
     background: linear-gradient(135deg, #667eea, #764ba2);
     opacity: 0.08;
-    z-index: 0;
+    z-index: 0 !important; /* shapes always behind */
 }
 
 .shape:nth-child(1) { width: 200px; height: 200px; top: 50px; left: 50px; }
@@ -25,10 +26,33 @@ body {
 .shape:nth-child(4) { width: 180px; height: 180px; top: 150px; right: 200px; }
 
 /* ===============================
+   ALERTS (FIXED)
+=================================*/
+.alert {
+    position: relative;
+    z-index: 99999 !important; /* ensures alerts appear above shapes */
+}
+
+/* ===============================
+   CARD FIX (to appear above shapes)
+=================================*/
+.card,
+.card-header,
+.card-body,
+.table,
+form,
+.container,
+.row {
+    position: relative;
+    z-index: 10 !important;
+}
+
+/* ===============================
    NAVBAR
 =================================*/
 .navbar {
     background: linear-gradient(135deg, #667eea, #764ba2) !important;
+    z-index: 20 !important;
 }
 
 .navbar .nav-link {

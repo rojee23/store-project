@@ -176,6 +176,29 @@
 
         <div class="card-body">
 
+            {{-- ALERTS ثابتة --}}
+            @if ($errors->any())
+                <div class="alert alert-danger" style="z-index:99999; position:relative;">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger" style="z-index:99999; position:relative;">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="alert alert-success" style="z-index:99999; position:relative;">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <form method="POST" action="{{ route('login.action') }}">
                 @csrf
 
@@ -211,7 +234,7 @@
     </div>
 </div>
 
-{{-- Toast Component (المكان الصحيح) --}}
+{{-- Toast Component (يضل شغال لباقي المشروع فقط) --}}
 @include('components.toast')
 
 </body>

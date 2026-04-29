@@ -15,93 +15,69 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        // التحقق من الإدخال
+        // VALIDATION
         $request->validate([
             'username' => 'required',
             'password' => 'required'
         ]);
 
-        // جلب المستخدم من جدول USER
+        // GET USER
         $user = DB::table('USER')
             ->where('username', $request->username)
             ->first();
 
-        // التحقق من وجود المستخدم
+        // USER NOT FOUND
         if (!$user) {
-            return back()->with('toast', [
-                'type' => 'error',
-                'message' => 'Invalid username'
-            ]);
+            return back()->with('error', 'Invalid username');
         }
 
-        // التحقق من كلمة المرور
+        // WRONG PASSWORD
         if ($user->password !== $request->password) {
-            return back()->with('toast', [
-                'type' => 'error',
-                'message' => 'Incorrect password'
-            ]);
+            return back()->with('error', 'Incorrect password');
         }
 
-        // التحقق من حالة الحساب
+        // ACCOUNT DISABLED
         if ($user->account_status != 1) {
-            return back()->with('toast', [
-                'type' => 'error',
-                'message' => 'Account is disabled'
-            ]);
+            return back()->with('error', 'Account is disabled');
         }
 
-        // جلب بيانات الموظف من PERSONAL_INFORMATION
+        // GET PERSONAL INFO
         $person = DB::table('PERSONAL_INFORMATION')
             ->where('user_id', $user->user_id)
             ->first();
 
         if (!$person) {
-            return back()->with('toast', [
-                'type' => 'error',
-                'message' => 'No personal information found for this user'
-            ]);
+            return back()->with('error', 'No personal information found for this user');
         }
 
-        // جلب الدور من جدول ROLE
+        // GET ROLE
         $role = DB::table('ROLE')
             ->where('role_id', $person->role_id)
             ->first();
 
-        // تخزين الجلسة
+        // STORE SESSION
         Session::put('user_id', $user->user_id);
         Session::put('username', $user->username);
         Session::put('logged_in', true);
-        Session::put('role_type', $role->type); // HR Officer, Manager, Employee...
+        Session::put('role_type', $role->type);
 
-        // التوجيه حسب الدور
+        // REDIRECT BASED ON ROLE — SUCCESS AS ALERT
         if ($role->type === 'HR Officer') {
-            return redirect()->route('hr.dashboard')->with('toast', [
-                'type' => 'success',
-                'message' => 'Login successful!'
-            ]);
+            return redirect()->route('hr.dashboard')->with('success', 'Login successful!');
         }
 
         if ($role->type === 'Manager') {
-            return redirect()->route('dashboard')->with('toast', [
-                'type' => 'success',
-                'message' => 'Login successful!'
-            ]);
+            return redirect()->route('dashboard')->with('success', 'Login successful!');
         }
 
-        // باقي الأدوار → Dashboard المتاجر
-        return redirect()->route('dashboard')->with('toast', [
-            'type' => 'success',
-            'message' => 'Login successful!'
-        ]);
+        // DEFAULT → STORES DASHBOARD
+        return redirect()->route('dashboard')->with('success', 'Login successful!');
     }
 
     public function logout()
     {
         Session::flush();
 
-        return redirect()->route('login')->with('toast', [
-            'type' => 'info',
-            'message' => 'Logged out successfully'
-        ]);
+        return redirect()->route('login')->with('success', 'Logged out successfully');
     }
 }

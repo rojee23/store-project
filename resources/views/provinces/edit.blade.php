@@ -2,6 +2,19 @@
 @section('title', 'تعديل محافظة')
 
 @section('content')
+
+{{-- عرض رسائل الأخطاء --}}
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <strong>حدثت أخطاء في الإدخال:</strong>
+        <ul class="mt-2 mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="card shadow-sm">
     <div class="card-header bg-warning text-dark">
         <i class="fas fa-edit me-1"></i> تعديل محافظة
@@ -39,4 +52,5 @@
         </form>
     </div>
 </div>
+
 @endsection

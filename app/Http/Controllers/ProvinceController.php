@@ -34,7 +34,10 @@ class ProvinceController extends Controller
         ]);
 
         Province::create($validated);
-        return redirect()->route('provinces.index')->with('success', 'تمت إضافة المحافظة بنجاح');
+
+        return redirect()
+            ->route('provinces.index')
+            ->with('success', 'تمت إضافة المحافظة بنجاح');
     }
 
     /**
@@ -58,12 +61,16 @@ class ProvinceController extends Controller
      */
     public function update(Request $request, Province $province)
     {
-       $validated = $request->validate([
-    'province_name' => 'required|string|max:50|unique:province,province_name,' . $province->province_id . ',province_id'
-]);
+        $validated = $request->validate([
+            'province_name' => 'required|string|max:50|unique:provinces,province_name,'
+                                . $province->province_id . ',province_id'
+        ]);
 
         $province->update($validated);
-        return redirect()->route('provinces.index')->with('success', 'تم تحديث المحافظة بنجاح');
+
+        return redirect()
+            ->route('provinces.index')
+            ->with('success', 'تم تحديث المحافظة بنجاح');
     }
 
     /**
@@ -72,6 +79,9 @@ class ProvinceController extends Controller
     public function destroy(Province $province)
     {
         $province->delete();
-        return redirect()->route('provinces.index')->with('success', 'تم حذف المحافظة بنجاح');
+
+        return redirect()
+            ->route('provinces.index')
+            ->with('success', 'تم حذف المحافظة بنجاح');
     }
 }

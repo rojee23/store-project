@@ -2,6 +2,14 @@
 @section('title', 'إدارة فروع المتجر')
 
 @section('content')
+
+{{-- عرض رسائل النجاح --}}
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold">
         <i class="fas fa-store-alt me-2"></i> إدارة فروع المتجر
@@ -12,7 +20,6 @@
     </a>
 </div>
 
-{{--  --}}
 <div class="input-group mb-3">
     <input type="text" id="searchInput" class="form-control" placeholder="ابحث عن فرع بالاسم أو المدينة..." value="{{ request('search') }}">
     <button class="btn btn-primary" onclick="doSearch()">
@@ -24,7 +31,6 @@
     @endif
 </div>
 
-{{-- جدول الفروع --}}
 <div class="card shadow-sm">
     <div class="card-header bg-primary text-white">
         <i class="fas fa-list me-1"></i> قائمة الفروع
@@ -76,14 +82,12 @@
     </div>
 </div>
 
-{{-- Pagination --}}
 <div class="d-flex justify-content-center mt-3">
     {{ $stores->appends(['search' => request('search')])->links() }}
 </div>
 
 @endsection
 
-{{-- سكربت البحث --}}
 <script>
 function doSearch() {
     let query = document.getElementById('searchInput').value.trim();

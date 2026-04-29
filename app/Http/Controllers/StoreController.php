@@ -10,13 +10,10 @@ use Illuminate\Support\Facades\DB;
 class StoreController extends Controller
 {
     // ============================
-    // 1) عرض الإحصائيات (اختياري)
+    // 1) عرض الإحصائيات
     // ============================
     public function statistics()
     {
-        // إذا ما عندك Stored Procedure احذفي هالسطر
-        // $counts = DB::select('CALL BranchCountPerProvince()');
-
         // مؤقتاً نرجع عدد المتاجر بكل محافظة
         $counts = Province::withCount('stores')->get();
 
@@ -54,10 +51,10 @@ class StoreController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'store_name' => 'required|string|max:50',
-            'city'       => 'required|string|max:50',
-            'address'    => 'required|string|max:50',
-            'phone'      => 'required|string|max:50',
+            'store_name'  => 'required|string|max:50',
+            'city'        => 'required|string|max:50',
+            'address'     => 'required|string|max:50',
+            'phone'       => 'required|string|max:50',
             'upload_file' => 'nullable|file'
         ]);
 
@@ -70,7 +67,9 @@ class StoreController extends Controller
 
         Store::create($validated);
 
-        return redirect()->route('stores.index')->with('success', 'تم إنشاء المتجر بنجاح');
+        return redirect()
+            ->route('stores.index')
+            ->with('success', 'تم إنشاء المتجر بنجاح');
     }
 
     // ============================
@@ -99,13 +98,14 @@ class StoreController extends Controller
         $store = Store::findOrFail($id);
 
         $validated = $request->validate([
-            'store_name' => 'required|string|max:50',
-            'city'       => 'required|string|max:50',
-            'address'    => 'required|string|max:50',
-            'phone'      => 'required|string|max:50',
+            'store_name'  => 'required|string|max:50',
+            'city'        => 'required|string|max:50',
+            'address'     => 'required|string|max:50',
+            'phone'       => 'required|string|max:50',
             'upload_file' => 'nullable|file'
         ]);
 
+        // رفع الملف إذا موجود
         if ($request->hasFile('upload_file')) {
             $fileName = time() . '.' . $request->upload_file->extension();
             $request->upload_file->move(public_path('uploads'), $fileName);
@@ -114,7 +114,9 @@ class StoreController extends Controller
 
         $store->update($validated);
 
-        return redirect()->route('stores.index')->with('success', 'تم تحديث المتجر بنجاح');
+        return redirect()
+            ->route('stores.index')
+            ->with('success', 'تم تحديث المتجر بنجاح');
     }
 
     // ============================
@@ -125,6 +127,8 @@ class StoreController extends Controller
         $store = Store::findOrFail($id);
         $store->delete();
 
-        return redirect()->route('stores.index')->with('success', 'تم حذف المتجر بنجاح');
+        return redirect()
+            ->route('stores.index')
+            ->with('success', 'تم حذف المتجر بنجاح');
     }
 }
