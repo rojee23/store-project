@@ -71,7 +71,7 @@ class LoginController extends Controller
         Session::put('user_id', $user->user_id);
         Session::put('username', $user->username);
         Session::put('logged_in', true);
-        Session::put('role_type', $role->type); // مثال: HR Officer, Manager, Employee...
+        Session::put('role_type', $role->type); // HR Officer, Manager, Employee...
 
         // التوجيه حسب الدور
         if ($role->type === 'HR Officer') {
@@ -82,14 +82,14 @@ class LoginController extends Controller
         }
 
         if ($role->type === 'Manager') {
-            return redirect()->route('stores.index')->with('toast', [
+            return redirect()->route('dashboard')->with('toast', [
                 'type' => 'success',
                 'message' => 'Login successful!'
             ]);
         }
 
-        // باقي الأدوار → نفس الـ dashboard
-        return redirect()->route('hr.dashboard')->with('toast', [
+        // باقي الأدوار → Dashboard المتاجر
+        return redirect()->route('dashboard')->with('toast', [
             'type' => 'success',
             'message' => 'Login successful!'
         ]);

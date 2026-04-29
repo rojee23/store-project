@@ -2,35 +2,53 @@
 @section('title', 'إضافة فرع جديد')
 
 @section('content')
-<h2>إضافة فرع جديد</h2>
-<form action="{{ route('stores.store') }}" method="POST">
-    @csrf
-    <div class="mb-3">
-        <label>اسم الفرع</label>
-        <input type="text" name="store_name" class="form-control" required>
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <i class="fas fa-plus-circle me-1"></i> إضافة فرع جديد
     </div>
-    <div class="mb-3">
-        <label>المحافظة</label>
-        <select name="province_id" class="form-control" required>
-            <option value="">اختر المحافظة</option>
-            @foreach(\App\Models\Province::all() as $province)
-                <option value="{{ $province->id }}">{{ $province->province_name }}</option>
-            @endforeach
-        </select>
+
+    <div class="card-body">
+        <form action="{{ route('stores.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">اسم الفرع <span class="text-danger">*</span></label>
+                    <input type="text" name="store_name" class="form-control" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">المدينة <span class="text-danger">*</span></label>
+                    <input type="text" name="city" class="form-control" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">العنوان <span class="text-danger">*</span></label>
+                    <input type="text" name="address" class="form-control" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">الهاتف <span class="text-danger">*</span></label>
+                    <input type="text" name="phone" class="form-control" required>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">ملف البروشور (اختياري)</label>
+                    <input type="file" name="upload_file" class="form-control">
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary rounded-pill">
+                <i class="fas fa-save me-1"></i> حفظ
+            </button>
+
+            <a href="{{ route('stores.index') }}" class="btn btn-outline-secondary rounded-pill">
+                إلغاء
+            </a>
+
+        </form>
     </div>
-    <div class="mb-3">
-        <label>المدينة</label>
-        <input type="text" name="city" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label>العنوان</label>
-        <input type="text" name="address" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label>الهاتف</label>
-        <input type="text" name="phone" class="form-control" required>
-    </div>
-    <button type="submit" class="btn btn-primary">حفظ</button>
-    <a href="{{ route('stores.index') }}" class="btn btn-secondary">إلغاء</a>
-</form>
+</div>
 @endsection

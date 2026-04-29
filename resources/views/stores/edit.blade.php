@@ -2,37 +2,80 @@
 @section('title', 'تعديل فرع')
 
 @section('content')
-<h2>تعديل فرع</h2>
-<form action="{{ route('stores.update', $store->id) }}" method="POST">
-    @csrf @method('PUT')
-    <div class="mb-3">
-        <label>اسم الفرع</label>
-        <input type="text" name="store_name" class="form-control" value="{{ old('store_name', $store->store_name) }}" required>
+<div class="card shadow-sm">
+    <div class="card-header bg-warning text-dark">
+        <i class="fas fa-edit me-1"></i> تعديل فرع
     </div>
-    <div class="mb-3">
-        <label>المحافظة</label>
-        <select name="province_id" class="form-control" required>
-            <option value="">اختر المحافظة</option>
-            @foreach(\App\Models\Province::all() as $province)
-                <option value="{{ $province->id }}" {{ $store->province_id == $province->id ? 'selected' : '' }}>
-                    {{ $province->province_name }}
-                </option>
-            @endforeach
-        </select>
+
+    <div class="card-body">
+        <form action="{{ route('stores.update', $store->store_id) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">اسم الفرع <span class="text-danger">*</span></label>
+                    <input type="text"
+                           name="store_name"
+                           class="form-control"
+                           value="{{ old('store_name', $store->store_name) }}"
+                           required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">المدينة <span class="text-danger">*</span></label>
+                    <input type="text"
+                           name="city"
+                           class="form-control"
+                           value="{{ old('city', $store->city) }}"
+                           required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">العنوان <span class="text-danger">*</span></label>
+                    <input type="text"
+                           name="address"
+                           class="form-control"
+                           value="{{ old('address', $store->address) }}"
+                           required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">الهاتف <span class="text-danger">*</span></label>
+                    <input type="text"
+                           name="phone"
+                           class="form-control"
+                           value="{{ old('phone', $store->phone) }}"
+                           required>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">ملف البروشور (اختياري)</label>
+                    <input type="file" name="upload_file" class="form-control">
+
+                    @if($store->upload_file)
+                        <div class="mt-2">
+                            <a href="{{ asset('uploads/' . $store->upload_file) }}"
+                               target="_blank"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-file-download me-1"></i> تنزيل البروشور الحالي
+                            </a>
+                        </div>
+                    @endif
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary rounded-pill">
+                <i class="fas fa-sync-alt me-1"></i> تحديث
+            </button>
+
+            <a href="{{ route('stores.index') }}" class="btn btn-outline-secondary rounded-pill">
+                إلغاء
+            </a>
+
+        </form>
     </div>
-    <div class="mb-3">
-        <label>المدينة</label>
-        <input type="text" name="city" class="form-control" value="{{ old('city', $store->city) }}" required>
-    </div>
-    <div class="mb-3">
-        <label>العنوان</label>
-        <input type="text" name="address" class="form-control" value="{{ old('address', $store->address) }}" required>
-    </div>
-    <div class="mb-3">
-        <label>الهاتف</label>
-        <input type="text" name="phone" class="form-control" value="{{ old('phone', $store->phone) }}" required>
-    </div>
-    <button type="submit" class="btn btn-primary">تحديث</button>
-    <a href="{{ route('stores.index') }}" class="btn btn-secondary">إلغاء</a>
-</form>
+</div>
 @endsection

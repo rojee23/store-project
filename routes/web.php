@@ -3,9 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HRController;
-
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\ProvinceController;
+use App\Http\Controllers\DashboardController;
+
 /*
 |--------------------------------------------------------------------------
 | Login Routes
@@ -68,27 +69,28 @@ Route::get('/hr/status/delete/{id}', [HRController::class, 'deleteStatus'])->nam
 
 /*
 |--------------------------------------------------------------------------
-| Provinces & Stores k3
-|-------------------------------------------------------------------------- */
+| Dashboard (Stores)
+|--------------------------------------------------------------------------
+*/
 
-// ============================
-//  Stores Statistics
-// ============================
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+/*
+|--------------------------------------------------------------------------
+| Provinces & Stores (Module 3)
+|--------------------------------------------------------------------------
+*/
+
+// Stores Statistics
 Route::get('/stores/statistics', [StoreController::class, 'statistics'])->name('stores.statistics');
 
-// ============================
-//  Stores Management
-// ============================
+// Stores Management
 Route::resource('stores', StoreController::class);
 
-// ============================
-//  Provinces Management
-// ============================
+// Provinces Management
 Route::resource('provinces', ProvinceController::class);
 
-// ============================
-//  Stores API
-// ============================
+// Stores API
 Route::prefix('api')->group(function () {
     Route::get('/stores/search', [StoreController::class, 'apiSearch']);
     Route::get('/stores', [StoreController::class, 'apiIndex']);
